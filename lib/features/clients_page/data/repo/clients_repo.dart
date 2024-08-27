@@ -1,8 +1,9 @@
+import 'package:dartz/dartz.dart';
+
 abstract class ClientsRepo{
 
   Future<void>createDataBase();
-  Future<void>openDataBase();
-  Future<void> insertToDataBase({required String name, required String date});
-  Future<void> getFromDB(DBB);
+  Future<void> insertToClients({required String name, required String date});
+  Future<Either<String,List<Map>>> getFromDB();
   Future <void> deleteData({required int id});
 }

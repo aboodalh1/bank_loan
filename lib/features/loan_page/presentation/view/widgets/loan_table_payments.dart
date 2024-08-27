@@ -27,6 +27,7 @@ class LoanPaymentTable extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
+          dividerThickness: 0.1,
           columnSpacing: 20.0,
           headingRowColor: MaterialStateColor.resolveWith(
                   (states) => const Color(0xFF004F9F)),
@@ -40,7 +41,7 @@ class LoanPaymentTable extends StatelessWidget {
                 DataRow(
                   color: MaterialStateColor.resolveWith((states) {
                     return index.isEven
-                        ? Colors.grey.shade200 // Even row color
+                        ? Color(0xFFF5F8FF) // Even row color
                         : Colors.white; // Odd row color
                   }),
                   cells: [

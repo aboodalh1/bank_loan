@@ -18,6 +18,7 @@ class LoanCubit extends Cubit<LoanState> {
   TextEditingController monthNumberController = TextEditingController();
   bool isButtonEnabled = false;
   int monthNumber() {
+    if(monthNumberController.text.isEmpty){return 0;}
     return int.parse(monthNumberController.text);
   }
 
@@ -40,9 +41,9 @@ class LoanCubit extends Cubit<LoanState> {
   }
 
   void calcLoanAmountWithBenefit() {
-    double dBenefit = double.parse(loanAmountController.text);
+    double dBenefit = double.parse(benefitController.text);
     double dAmount = double.parse(loanAmountController.text);
-    loanAmountWithBenefit = dAmount + (dAmount * dBenefit / 100);
+    loanAmountWithBenefit = dAmount + (dAmount * dBenefit / 100).round();
     emit(GenerateResults());
   }
 
@@ -58,7 +59,6 @@ class LoanCubit extends Cubit<LoanState> {
     emit(ValidAmount());
   }
   void checkLoanAmount() {
-
     if(double.parse(loanAmountController.text) >= 100000&&
         double.parse(loanAmountController.text)<10000000)
     {
@@ -158,7 +158,6 @@ class LoanCubit extends Cubit<LoanState> {
 
       sheetObject.insertRowIterables(headers.cast<CellValue?>(), 0);
 
-      // Insert data rows (replace with actual data from your table)
       for (var i = 0; i < double.parse(monthNumberController.text); i++) {
         sheetObject.insertRowIterables([
           TextCellValue('0${i + 1}'),

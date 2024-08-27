@@ -1,5 +1,6 @@
 import 'package:bank_loan/core/util/local_storage/sqflite_helper.dart';
 import 'package:bank_loan/features/clients_page/data/repo/clients_repo.dart';
+import 'package:dartz/dartz.dart';
 
 class ClientsRepoImpl implements ClientsRepo{
   final SqfliteHelper sqfliteHelper;
@@ -10,23 +11,25 @@ class ClientsRepoImpl implements ClientsRepo{
   }
 
   @override
-  Future<void> getFromDB(DBB) async{
-    sqfliteHelper.getFromDB(DBB);
+  Future<Either<String,List<Map>>> getFromDB() async{
+    try{
+      var response = await sqfliteHelper.clientDB.rawQuery('SELECT * FROM client');
+      return right(response);
+    }catch(e){
+      return left(e.toString());
+    }
   }
 
   @override
-  Future<void> insertToDataBase({required String name, required String date}) async{
+  Future<void> insertToClients({required String name, required String date}) async{
     sqfliteHelper.insertToClient(name: name, date: date);
+    getFromDB();
   }
 
   @override
   Future<void> deleteData({required int id}) async{
     sqfliteHelper.removeData(id: id);
-  }
-
-  @override
-  Future<void> openDataBase() async{
-    sqfliteHelper.openDataBase();
+    getFromDB();
   }
 
 

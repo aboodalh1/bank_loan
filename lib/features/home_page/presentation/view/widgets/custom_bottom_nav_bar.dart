@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
-import '../../../../home_page/presentation/manger/home_cubit.dart';
+import '../../manger/home_cubit.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   const CustomBottomNavBar({super.key, required this.cubit});
@@ -27,7 +27,7 @@ class CustomBottomNavBar extends StatelessWidget {
               ),
               SalomonBottomBarItem(
                 icon: const Icon(Icons.person),
-                selectedColor: Colors.green,
+                selectedColor: const Color(0xFF004F9F),
                 unselectedColor: Colors.black,
                 title: const Text('العملاء'),
               )
