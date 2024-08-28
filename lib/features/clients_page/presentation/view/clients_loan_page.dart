@@ -5,6 +5,7 @@ import 'package:bank_loan/features/clients_page/presentation/view/widgets/loan_i
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/util/screen_size.dart';
 import '../manger/clients_cubit.dart';
 
 class ClientLoanPage extends StatelessWidget {
@@ -14,6 +15,7 @@ class ClientLoanPage extends StatelessWidget {
   final ClientsCubit cubit;
   const ClientLoanPage(
       {super.key, required this.uId, required this.clientName, required this.cubit});
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ClientsCubit, ClientsState>(
@@ -34,7 +36,7 @@ class ClientLoanPage extends StatelessWidget {
               child: CustomFloatingButton(uId: uId),
             ),
             appBar: AppBar(
-              title: Text("قروض $clientName"),
+              title: Text("قروض $clientName",style: TextStyle(fontSize:ScreenSizeUtil.screenWidth * 0.04),),
             ),
             body: cubit.loans.length > 0
                 ? ListView.builder(

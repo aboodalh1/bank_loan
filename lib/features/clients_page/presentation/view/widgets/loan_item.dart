@@ -1,9 +1,8 @@
 import 'package:bank_loan/features/clients_page/presentation/view/widgets/delete_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../core/util/network/service_locator.dart';
+import '../../../../../core/util/screen_size.dart';
 import '../../../../loan_page/presentation/manger/loan_cubit.dart';
-import '../../../data/repo/clients_repo_impl.dart';
 import '../../manger/clients_cubit.dart';
 import 'client_loan_details.dart';
 import 'edit_loan_dialog.dart';
@@ -26,7 +25,7 @@ class LoanItem extends StatelessWidget {
       ),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(ScreenSizeUtil.screenWidth * 0.03),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -36,26 +35,32 @@ class LoanItem extends StatelessWidget {
                 children: [
                   Text(
                     'رقم القرض: ${cubit.loans[index]['id']}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: ScreenSizeUtil.screenWidth * 0.04,
                       color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 20),
                   Text(
                     'قيمة القرض: ${cubit.loans[index]['amount']}',
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: ScreenSizeUtil.screenWidth * 0.04),
                   ),
                   const SizedBox(height: 20),
                   Text(
                     'تاريخ القرض: ${cubit.loans[index]['date']}',
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: ScreenSizeUtil.screenWidth * 0.04),
                   ),
                   const SizedBox(height: 20),
                   Text(
                     'عدد الدفعات المنتهية: ${cubit.loans[index]['paymentsNumber']}',
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: ScreenSizeUtil.screenWidth * 0.04),
                   ),
                 ],
               ),
@@ -95,19 +100,21 @@ class LoanItem extends StatelessWidget {
                                 BlocProvider(
                                   create: (context) => LoanCubit(),
                                 ),
-                                BlocProvider(
-                                  create: (context) => ClientsCubit(
-                                      getIt.get<ClientsRepoImpl>()),
+                                BlocProvider.value(
+                                  value: cubit,
                                 ),
                               ],
                               child: Scaffold(
                                   body: Directionality(
                                       textDirection: TextDirection.rtl,
                                       child: ClientLoanDetails(
-                                        paymentsNumbr: '${cubit.loans[index]['paymentsNumber']}',
+                                        paymentsNumbr:
+                                            '${cubit.loans[index]['paymentsNumber']}',
                                         date: '${cubit.loans[index]['date']}',
-                                        monthNumber: '${cubit.loans[index]['monthNumber']}',
-                                        amount: '${cubit.loans[index]['amount']}',
+                                        monthNumber:
+                                            '${cubit.loans[index]['monthNumber']}',
+                                        amount:
+                                            '${cubit.loans[index]['amount']}',
                                         benefit: '20',
                                         id: '${cubit.loans[index]['id']}',
                                       ))),

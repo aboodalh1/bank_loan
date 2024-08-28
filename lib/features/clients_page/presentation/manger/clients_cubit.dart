@@ -71,7 +71,7 @@ class ClientsCubit extends Cubit<ClientsState> {
   }
 
   Future<void> insertClient() async {
-    if (nameController.text.isNotEmpty && dateController.text.isNotEmpty) {
+    if (nameController.text.isNotEmpty && dateController.text.isNotEmpty ) {
       emit(InsertClientLoading());
       await clientsRepo
           .insertToClients(name: nameController.text, date: dateController.text)
@@ -138,7 +138,6 @@ class ClientsCubit extends Cubit<ClientsState> {
     var result =
         await clientsRepo.editLoan(paymentsNumber: paymentsNumber, id: id);
     result.fold((error) {
-      print(error.toString());
       emit(EditClientFailure(error: error.toString()));
     }, (r) {
       editNameController.clear();

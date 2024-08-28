@@ -21,12 +21,12 @@ class CustomDropDown extends StatelessWidget {
             value: 12,
           ),
           DropdownMenuEntry(
-            label: '18',
-            value: 18,
-          ),
-          DropdownMenuEntry(
             label: '24',
             value: 24,
+          ),
+          DropdownMenuEntry(
+            label: '48',
+            value: 48,
           ),
         ]);
   }

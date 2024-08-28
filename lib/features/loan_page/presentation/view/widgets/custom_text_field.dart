@@ -15,28 +15,43 @@ class CustomNumberFormatter extends TextInputFormatter {
     return oldValue;
   }
 }
+class CustomNumberFormatter1 extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    final regExp = RegExp(r'^\d{0,3}(\.\d{0,2})?$');
+
+    if (regExp.hasMatch(newValue.text)) {
+      return newValue;
+    }
+
+
+    return oldValue;
+  }
+}
 Padding customTextField(context,
-    {ValueChanged<String>? onChanged,Icon? icon,required String label, required TextEditingController controller}) {
+    {bool? isBenefit,bool? isEnabled,ValueChanged<String>? onChanged,Icon? icon,required String label, required TextEditingController controller}) {
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Text(label,style: const TextStyle(fontFamily: 'Almarai'),),
+        Text(label,style: TextStyle(fontFamily: 'Almarai',fontSize: ScreenSizeUtil.screenWidth*0.040),),
         const SizedBox(height: 10,),
         SizedBox(
           width: ScreenSizeUtil.screenWidth*.5,
           child: TextFormField(
+            enabled: isEnabled,
             keyboardType: const TextInputType.numberWithOptions(decimal: true,),
             inputFormatters: [
-              CustomNumberFormatter(),
+              isBenefit!? CustomNumberFormatter1():CustomNumberFormatter(),
               ],
             onChanged: onChanged,
+            style: TextStyle(fontFamily: 'Almarai',color: Colors.black87,fontSize: ScreenSizeUtil.screenWidth*0.040),
             decoration: InputDecoration(
               suffixIcon: controller.text.isEmpty ? null : icon,
                 hintText: label,
-                hintStyle: const TextStyle(fontFamily: 'Almarai',color: Colors.grey,),
+                hintStyle: TextStyle(fontFamily: 'Almarai',color: Colors.grey,fontSize: ScreenSizeUtil.screenWidth*0.040),
                 border: InputBorder.none,
                 fillColor: Colors.white,
                 filled: true,

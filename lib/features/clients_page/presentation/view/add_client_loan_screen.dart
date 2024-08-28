@@ -26,13 +26,13 @@ class AddClientLoanScreen extends StatelessWidget {
           textDirection: TextDirection.rtl,
           child: Scaffold(
             body: CustomScrollView(slivers: [
-              const SliverAppBar(
+              SliverAppBar(
                   backgroundColor: Color(0xFFF7F7F7),
                   floating: true,
                   title: Text(
                     'إضافة قرض جديد',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: ScreenSizeUtil.screenWidth * 0.04,
                     ),
                   )),
               SliverToBoxAdapter(
@@ -42,6 +42,7 @@ class AddClientLoanScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: customTextField(
+                            isBenefit: false,
                             onChanged: (val) {
                               if (val.length > 1) {
                                 cubit.checkLoanAmount();
@@ -74,6 +75,8 @@ class AddClientLoanScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: customTextField(
+                            isBenefit: true,
+                            isEnabled: false,
                             context,
                             controller: context.read<LoanCubit>().benefitController,
                             label: 'نسبة الفائدة (%)',
@@ -95,6 +98,7 @@ class AddClientLoanScreen extends StatelessWidget {
                                       const Color(0xFF004F9F),
                                     )),
                                 onPressed: () {
+                                  cubit.benefitController.text = '20';
                                   cubit.calcResults(context);
                                 },
                                 child: const Text(
@@ -168,6 +172,7 @@ class AddClientLoanScreen extends StatelessWidget {
                                       paymentsNumber: 0,
                                       date: intl.DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
                                     );
+
                                   });
                             },
                           )

@@ -1,7 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../../../../../core/util/screen_size.dart';
 import '../../manger/clients_cubit.dart';
+import 'package:flutter/services.dart';
 
+class AlphanumericAndArabicTextInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue,
+      TextEditingValue newValue,
+      ) {
+    final newText = newValue.text;
+
+    // Regular expression to include Arabic letters (ا-ي), Arabic digits (٠-٩), and Latin letters and digits
+    final filteredText = newText.replaceAll(RegExp(r'[^a-zA-Z0-9ا-ي٠-٩]'), '');
+
+    return newValue.copyWith(
+      text: filteredText,
+      selection: TextSelection.collapsed(offset: filteredText.length),
+    );
+  }
+}
 void showAddClientDialog(BuildContext context, ClientsCubit cubit) {
   showDialog(
     context: context,
@@ -10,15 +30,20 @@ void showAddClientDialog(BuildContext context, ClientsCubit cubit) {
         textDirection: TextDirection.rtl,
         child: AlertDialog(
           backgroundColor: Colors.white,
-          title: const Text('إضافة زبون جديد'),
+          title:  Text('إضافة زبون جديد',style: TextStyle(fontSize: ScreenSizeUtil.screenWidth * 0.04),),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
+                inputFormatters: [
+         AlphanumericAndArabicTextInputFormatter()
+                ],
                 controller: cubit.nameController,
-                decoration: const InputDecoration(labelText: 'اسم الزبون'),
+                decoration:  InputDecoration(labelText: 'اسم الزبون',labelStyle: TextStyle(fontSize: ScreenSizeUtil.screenWidth * 0.04)),
               ),
               TextField(
+
+                style: TextStyle(fontSize: ScreenSizeUtil.screenWidth * 0.04),
                 onTap: ()async{
                   final DateTime ? picked= await showDatePicker(
                     context: context,
@@ -40,21 +65,22 @@ void showAddClientDialog(BuildContext context, ClientsCubit cubit) {
                     cubit.dateController.text=picked.toString().substring(0,10);
                   }
                 },
+                inputFormatters: [],
                 controller: cubit.dateController,
-                decoration: const InputDecoration(labelText: 'تاريخ التقديم'),
+                decoration:  InputDecoration(labelText: 'تاريخ التقديم',labelStyle: TextStyle(fontSize: ScreenSizeUtil.screenWidth * 0.04)),
                 keyboardType: TextInputType.datetime,
               ),
             ],
           ),
           actions: [
             TextButton(
-              child: const Text('إلغاء',style: TextStyle(color: Colors.black),),
+              child:  Text('إلغاء',style: TextStyle(color: Colors.black,fontSize: ScreenSizeUtil.screenWidth * 0.04),),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('إضافة', style: TextStyle(color: Color(0xFF004F9F))),
+              child:  Text('إضافة', style: TextStyle(color: Color(0xFF004F9F),fontSize: ScreenSizeUtil.screenWidth * 0.04)),
               onPressed: () {
                 cubit.insertClient();
                 Navigator.of(context).pop();

@@ -19,13 +19,13 @@ class LoanScreen extends StatelessWidget {
   builder: (context, state) {
     var cubit = context.read<LoanCubit>();
     return CustomScrollView(slivers: [
-      const SliverAppBar(
+      SliverAppBar(
           backgroundColor: Color(0xFFF7F7F7),
           floating: true,
           title: Text(
             'التقسيط',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: ScreenSizeUtil.screenWidth*0.056
             ),
           )),
       SliverToBoxAdapter(
@@ -35,6 +35,7 @@ class LoanScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: customTextField(
+                    isBenefit: false,
                     onChanged: (val){
                       if(val.length>1){cubit.checkLoanAmount();}
                       else {
@@ -50,11 +51,11 @@ class LoanScreen extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    const Padding(
+                     Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
                         "عدد الدفعات (أشهر)",
-
+                        style: TextStyle(fontSize: ScreenSizeUtil.screenWidth*0.050),
                       ),
                     ),
                     CustomDropDown(cubit: cubit),
@@ -67,6 +68,7 @@ class LoanScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: customTextField(
+                    isBenefit: true,
                     context,
                     controller:
                     context.read<LoanCubit>().benefitController,
@@ -90,23 +92,23 @@ class LoanScreen extends StatelessWidget {
                     onPressed: () {
                       cubit.calcResults(context);
                     },
-                    child: const Text(
+                    child:  Text(
                       'حساب الدفعات',
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14,
+                          fontSize: ScreenSizeUtil.screenWidth*0.035,
                           fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
               ],
             ),
-            const Padding(
-              padding: EdgeInsets.all(18.0),
+            Padding(
+              padding: EdgeInsets.all( ScreenSizeUtil.screenWidth*0.03),
               child: ResultsCard(),
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(ScreenSizeUtil.screenWidth*0.03),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

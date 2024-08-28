@@ -42,7 +42,6 @@ class SqfliteHelper {
   Future<List<Map>> readData(String sql) async {
     Database? mydb = await db;
     List<Map> response = await mydb!.rawQuery(sql);
-    print(response);
     return response;
   }
 

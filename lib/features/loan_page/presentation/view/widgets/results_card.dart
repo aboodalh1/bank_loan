@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../core/util/screen_size.dart';
@@ -16,7 +15,7 @@ class ResultsCard extends StatelessWidget {
     return BlocBuilder<LoanCubit, LoanState>(
       builder: (context, state) {
         return Container(
-          padding: const EdgeInsets.all(20),
+          padding:  EdgeInsets.all(ScreenSizeUtil.screenWidth*0.05 ),
           decoration: BoxDecoration(
               gradient: const LinearGradient(
                   colors: [Colors.blue, Color(0xFF004F9F)]),
@@ -30,20 +29,20 @@ class ResultsCard extends StatelessWidget {
                 children: [
                   Text(
                     'الدفعات الشهرية',
-                    style: GoogleFonts.almarai(
+                    style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize:  ScreenSizeUtil.screenWidth*0.045,
                         fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    NumberFormat("#,##0.00").format(
+                    NumberFormat("#,##0").format(
                       context
                           .read<LoanCubit>()
                           .monthlyOverallPayment,
                     ),
-                    style: GoogleFonts.almarai(
+                    style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize:  ScreenSizeUtil.screenWidth*0.045,
                         fontWeight: FontWeight.w600),
                   ),
                 ],
@@ -54,19 +53,19 @@ class ResultsCard extends StatelessWidget {
                 children: [
                   Text(
                     'مجموع الدفعات',
-                    style: GoogleFonts.almarai(
+                    style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize:  ScreenSizeUtil.screenWidth*0.045,
                         fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    NumberFormat("#,##0.00").format(context
+                    NumberFormat("#,##0").format(context
                         .read<LoanCubit>()
                         .loanAmountWithBenefit
                     ),
-                    style: GoogleFonts.almarai(
+                    style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize: ScreenSizeUtil.screenWidth*0.045,
                         fontWeight: FontWeight.w600),
                   ),
                 ],

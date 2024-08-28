@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/util/network/service_locator.dart';
+import '../../../../../core/util/screen_size.dart';
 import '../../../../loan_page/presentation/manger/loan_cubit.dart';
 import '../../../../loan_page/presentation/view/widgets/custom_circled_button.dart';
 import '../../../data/repo/clients_repo_impl.dart';
@@ -22,7 +23,7 @@ class EmptyLoanScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('لا يوجد قروض جارية لهذا الزبون'),
+           Text('لا يوجد قروض جارية لهذا الزبون',style: TextStyle(fontSize: ScreenSizeUtil.screenWidth * 0.04),),
           const SizedBox(
             height: 10,
           ),

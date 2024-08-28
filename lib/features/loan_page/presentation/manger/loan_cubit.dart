@@ -93,9 +93,15 @@ class LoanCubit extends Cubit<LoanState> {
     if (loanAmountController.text.isNotEmpty &&
         monthNumber() > 0 &&
         benefitController.text.isNotEmpty) {
-      calcOverallMonthlyPayment();
-      calcLoanAmountWithBenefit();
-      isButtonEnabled = true;
+      if (double.parse(loanAmountController.text) >= 100000 &&
+          double.parse(loanAmountController.text) <= 10000000) {
+        calcOverallMonthlyPayment();
+        calcLoanAmountWithBenefit();
+        isButtonEnabled = true;
+      } else {
+        customSnackBar(context,
+            'يجب أن يكون مبلغ القرض بين مئة الف وعشرة ملايين ليرة سورية');
+      }
     } else {
       customSnackBar(context, 'جميع الحقول مطلوبة');
     }
@@ -118,15 +124,74 @@ class LoanCubit extends Cubit<LoanState> {
     emit(HideLoanTable());
   }
 
-  void printTable(BuildContext context) {
+  void printTable(BuildContext context) async {
     final pdf = pw.Document();
-
+    var fontdata = await rootBundle.load("assets/fonts/Almarai-Bold.ttf");
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
-          return pw.Center(
-            child: pw.Text("Loan Payment Table"),
-          );
+          return pw.Directionality(
+              textDirection: pw.TextDirection.rtl,
+              child: pw.Column(
+                children: [
+                  pw.Text(
+                    "Loan Payment Table",
+                    style: pw.TextStyle(
+                        fontSize: 24, fontWeight: pw.FontWeight.bold),
+                  ),
+                  pw.SizedBox(height: 20),
+                  pw.TableHelper.fromTextArray(
+                    headers: [
+                      'رقم الدفعة',
+                      'مجموع الدفعات',
+                      'الأساسي',
+                      'الفائدة',
+                      'الرصيد',
+                      'المبلغ المتبقي'
+                    ],
+                    data: List<List<String>>.generate(
+                      monthNumber(),
+                      (index) {
+                        final paymentNumber = (index + 1).toString();
+                        final totalPayments = NumberFormat("#,##0").format(
+                            loanAmountWithBenefit -
+                                (index * monthlyOverallPayment).round());
+                        final principal = NumberFormat("#,##0")
+                            .format(monthlyOverallPayment.round());
+                        final interest = NumberFormat("#,##0")
+                            .format(calcMonthlyBenefitPayment().round());
+                        final balance = NumberFormat("#,##0")
+                            .format(calcLoanMonthlyPayment().round());
+                        final remainingAmount = NumberFormat("#,##0").format(
+                            (loanAmountWithBenefit -
+                                    (index * monthlyOverallPayment)) -
+                                monthlyOverallPayment.round());
+                        return [
+                          paymentNumber,
+                          totalPayments,
+                          principal,
+                          interest,
+                          balance,
+                          remainingAmount
+                        ];
+                      },
+                    ),
+                    headerStyle: pw.TextStyle(
+                        font: pw.Font.ttf(fontdata), color: PdfColors.white),
+                    headerDecoration:
+                        const pw.BoxDecoration(color: PdfColors.blue),
+                    cellHeight: 30,
+                    cellAlignments: {
+                      0: pw.Alignment.centerRight,
+                      1: pw.Alignment.centerRight,
+                      2: pw.Alignment.centerRight,
+                      3: pw.Alignment.centerRight,
+                      4: pw.Alignment.centerRight,
+                      5: pw.Alignment.centerRight,
+                    },
+                  ),
+                ],
+              ));
         },
       ),
     );
@@ -191,7 +256,8 @@ class LoanCubit extends Cubit<LoanState> {
                     ),
                     headerStyle: pw.TextStyle(
                         font: pw.Font.ttf(fontdata), color: PdfColors.white),
-                    headerDecoration: const pw.BoxDecoration(color: PdfColors.blue),
+                    headerDecoration:
+                        const pw.BoxDecoration(color: PdfColors.blue),
                     cellHeight: 30,
                     cellAlignments: {
                       0: pw.Alignment.centerRight,
@@ -220,7 +286,8 @@ class LoanCubit extends Cubit<LoanState> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not access the Downloads directory.')),
+          const SnackBar(
+              content: Text('Could not access the Downloads directory.')),
         );
       }
     } else {
@@ -249,15 +316,14 @@ class LoanCubit extends Cubit<LoanState> {
         TextCellValue('0${i + 1}'),
         TextCellValue(NumberFormat("#,##0").format(
             loanAmountWithBenefit - (i * monthlyOverallPayment).round())),
-        TextCellValue(NumberFormat("#,##0")
-            .format(monthlyOverallPayment.round())),
-        TextCellValue(NumberFormat("#,##0")
-            .format(calcMonthlyBenefitPayment().round())),
-        TextCellValue(NumberFormat("#,##0")
-            .format(calcLoanMonthlyPayment().round())),
+        TextCellValue(
+            NumberFormat("#,##0").format(monthlyOverallPayment.round())),
+        TextCellValue(
+            NumberFormat("#,##0").format(calcMonthlyBenefitPayment().round())),
+        TextCellValue(
+            NumberFormat("#,##0").format(calcLoanMonthlyPayment().round())),
         TextCellValue(NumberFormat("#,##0").format(
-            (loanAmountWithBenefit -
-                (i * monthlyOverallPayment)) -
+            (loanAmountWithBenefit - (i * monthlyOverallPayment)) -
                 monthlyOverallPayment.round()))
       ], i + 1);
     }
@@ -272,12 +338,13 @@ class LoanCubit extends Cubit<LoanState> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not access the Downloads directory.')),
+          const SnackBar(
+              content: Text('Could not access the Downloads directory.')),
         );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Permission denied. Cannot save PDF.')),
+        const SnackBar(content: Text('Permission denied. Cannot save XLS.')),
       );
     }
   }

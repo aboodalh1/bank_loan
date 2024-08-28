@@ -4,7 +4,6 @@ import 'package:bank_loan/features/clients_page/presentation/manger/clients_cubi
 import 'package:bank_loan/features/clients_page/presentation/view/widgets/add_client_dialog.dart';
 import 'package:bank_loan/features/clients_page/presentation/view/widgets/client_item.dart';
 import 'package:bank_loan/features/clients_page/presentation/view/widgets/clients_search_bar.dart';
-import 'package:bank_loan/features/clients_page/presentation/view/widgets/empty_loan_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,7 +37,7 @@ class ClientsScreen extends StatelessWidget {
           appBar: AppBar(
             title: const Text('الزبائن'),
           ),
-          body: cubit.clients.isEmpty? EmptyClientScreen(cubit: cubit,):SingleChildScrollView(
+          body: SingleChildScrollView(
             child: Column(
               children: [
                 Padding(
@@ -85,12 +84,17 @@ class ClientsFloatingButton extends StatelessWidget {
           showAddClientDialog(context, cubit);
         },
         backgroundColor: const Color(0xFF004F9F),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("إضافة زبون",
-                style: TextStyle(color: Colors.white, height: -0.2)),
-            SizedBox(width: 5,),
+                style: TextStyle(
+                    color: Colors.white,
+                    height: -0.2,
+                    fontSize: ScreenSizeUtil.screenWidth * 0.04)),
+            SizedBox(
+              width: 5,
+            ),
             Icon(
               Icons.add,
               color: Colors.white,

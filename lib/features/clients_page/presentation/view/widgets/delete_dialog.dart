@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/util/screen_size.dart';
 import '../../manger/clients_cubit.dart';
 
 void showDeleteConfirmation(
@@ -14,13 +15,13 @@ void showDeleteConfirmation(
             title),
         actions: [
           TextButton(
-            child: const Text('إلغاء',style: TextStyle(color: Colors.black),),
+            child:  Text('إلغاء',style: TextStyle(color: Colors.black,fontSize: ScreenSizeUtil.screenWidth * 0.04),),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           TextButton(
-            child: const Text('حذف', style: TextStyle(color: Colors.red)),
+            child:  Text('حذف', style: TextStyle(color: Colors.red,fontSize: ScreenSizeUtil.screenWidth * 0.04)),
             onPressed: () {
               if(isClient)
                 cubit.deleteClient(id: id);
