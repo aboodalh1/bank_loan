@@ -1,6 +1,6 @@
 import 'package:bank_loan/features/loan_page/presentation/view/widgets/custom_circled_button.dart';
 import 'package:bank_loan/features/loan_page/presentation/view/widgets/custom_text_field.dart';
-import 'package:bank_loan/features/loan_page/presentation/view/widgets/cutsom_drop_down.dart';
+import 'package:bank_loan/features/loan_page/presentation/view/widgets/custom_drop_down.dart';
 import 'package:bank_loan/features/loan_page/presentation/view/widgets/loan_table_payments.dart';
 import 'package:bank_loan/features/loan_page/presentation/view/widgets/results_card.dart';
 import 'package:flutter/material.dart';

@@ -35,31 +35,7 @@ class LoanPaymentTable extends StatelessWidget {
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
-          rows: List<DataRow>.generate(
-            monthNumber.toInt(),
-                (index) =>
-                DataRow(
-                  color: MaterialStateColor.resolveWith((states) {
-                    return index.isEven
-                        ? const Color(0xFFF5F8FF) // Even row color
-                        : Colors.white; // Odd row color
-                  }),
-                  cells: [
-                    DataCell(Text('${index + 1}')),
-                    DataCell(Text(NumberFormat("#,##0").format(loanAmountWithBenefit -
-                        (index * monthlyOverallPayment).round()))),
-                    DataCell(Text(NumberFormat("#,##0").format(
-                        monthlyOverallPayment.round()))),
-                    DataCell(Text(
-                        NumberFormat("#,##0").format(monthlyBenefitPayment.round()))),
-                    DataCell(
-                        Text(NumberFormat("#,##0").format(monthlyLoanPayment.round()))),
-                    DataCell(
-                      Text(NumberFormat("#,##0").format((loanAmountWithBenefit -
-                          (index * monthlyOverallPayment))-monthlyOverallPayment.round() )),)
-                  ],
-                ),
-          ),
+          rows: buildList(),
           columns: const [
             DataColumn(label: Text('رقم الدفعة')),
             DataColumn(label: Text('مجموع الدفعات')),
@@ -70,5 +46,33 @@ class LoanPaymentTable extends StatelessWidget {
           ],
         ),
       ),);
+  }
+
+  List<DataRow> buildList() {
+    return List<DataRow>.generate(
+          monthNumber.toInt(),
+              (index) =>
+              DataRow(
+                color: MaterialStateColor.resolveWith((states) {
+                  return index.isEven
+                      ? const Color(0xFFF5F8FF) // Even row color
+                      : Colors.white; // Odd row color
+                }),
+                cells: [
+                  DataCell(Text('${index + 1}')),
+                  DataCell(Text(NumberFormat("#,##0").format(loanAmountWithBenefit -
+                      (index * monthlyOverallPayment).round()))),
+                  DataCell(Text(NumberFormat("#,##0").format(
+                      monthlyOverallPayment.round()))),
+                  DataCell(Text(
+                      NumberFormat("#,##0").format(monthlyBenefitPayment.round()))),
+                  DataCell(
+                      Text(NumberFormat("#,##0").format(monthlyLoanPayment.round()))),
+                  DataCell(
+                    Text(NumberFormat("#,##0").format((loanAmountWithBenefit -
+                        (index * monthlyOverallPayment))-monthlyOverallPayment.round() )),)
+                ],
+              ),
+        );
   }
 }

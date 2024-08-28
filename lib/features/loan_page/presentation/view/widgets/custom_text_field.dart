@@ -5,15 +5,13 @@ import 'package:flutter/services.dart';
 class CustomNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    // Allow only numbers with an optional decimal point, and limit to 9 digits and 2 decimals
-    final regExp = RegExp(r'^\d{0,9}(\.\d{0,2})?$');
+    final regExp = RegExp(r'^\d{0,8}(\.\d{0,2})?$');
 
-    // If the new value matches the regex, allow the update
     if (regExp.hasMatch(newValue.text)) {
       return newValue;
     }
 
-    // Otherwise, keep the old value
+
     return oldValue;
   }
 }
@@ -42,6 +40,7 @@ Padding customTextField(context,
                 border: InputBorder.none,
                 fillColor: Colors.white,
                 filled: true,
+
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide:

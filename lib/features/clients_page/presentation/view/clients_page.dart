@@ -1,18 +1,20 @@
+import 'package:bank_loan/core/util/screen_size.dart';
 import 'package:bank_loan/core/widgets/custom_snack_bar/custom_snack_bar.dart';
 import 'package:bank_loan/features/clients_page/presentation/manger/clients_cubit.dart';
-import 'package:bank_loan/features/clients_page/presentation/view/claients_loan_page.dart';
 import 'package:bank_loan/features/clients_page/presentation/view/widgets/add_client_dialog.dart';
-import 'package:bank_loan/features/clients_page/presentation/view/widgets/delet_dialog.dart';
-import 'package:bank_loan/features/clients_page/presentation/view/widgets/edit_client_dialog.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:bank_loan/features/clients_page/presentation/view/widgets/client_item.dart';
+import 'package:bank_loan/features/clients_page/presentation/view/widgets/clients_search_bar.dart';
+import 'package:bank_loan/features/clients_page/presentation/view/widgets/empty_loan_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ClientsScreen extends StatelessWidget {
+  const ClientsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ClientsCubit, ClientsState>(
+      buildWhen: (previous, current) => current is! GetClientsLoading,
       listener: (context, state) {
         if (state is InsertClientSuccess) {
           customSnackBar(context, 'تمت إضافة الزبون');
@@ -23,104 +25,79 @@ class ClientsScreen extends StatelessWidget {
         if (state is EditClientSuccess) {
           customSnackBar(context, 'تمت إضافة الزبون');
         }
-        if (state is EditClientFailure ) {
+        if (state is EditClientFailure) {
           customSnackBar(context, state.error.toString());
         }
-
+        if (state is InsertClientFailure) {
+          customSnackBar(context, state.error.toString());
+        }
       },
       builder: (context, state) {
         var cubit = context.read<ClientsCubit>();
-        if(state is GetClientsLoading){
-          return Scaffold(body: SizedBox(height: 20,width: 20,child: CircularProgressIndicator(),),);
-        }
         return Scaffold(
           appBar: AppBar(
-            title: const Text('العملاء'),
+            title: const Text('الزبائن'),
           ),
-          body: ListView.builder(
-            itemCount: cubit.clients.length,
-            itemBuilder: (context, index) {
-              return Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  gradient: const LinearGradient(
-                      colors: [Color(0xFF004F9F), Color(0xFF2077D9)]),
+          body: cubit.clients.isEmpty? EmptyClientScreen(cubit: cubit,):SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 10.0),
+                  child: ClientsSearchBar(cubit: cubit),
                 ),
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              cubit.clients[index]['clientName']!,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              cubit.clients[index]['date']!,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.edit, color: Colors.white),
-                        tooltip: 'تعديل المعلومات',
-                        onPressed: () {
-                          showEditClientDialog(context,cubit,cubit.clients[index]['uid']);
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.white),
-                        tooltip: 'حذف زبون',
-                        onPressed: () {
-                          print(cubit.clients[index]['uid']);
-                          showDeleteConfirmation(
-                              context,
-                              cubit.clients[index]['clientName']!,
-                              cubit.clients[index]['uid'],
-                              cubit);
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.add, color: Colors.white),
-                        tooltip: 'إضافة قرض',
-                        onPressed: () {
-                          Navigator.push(
-                              context, MaterialPageRoute(builder: (context) =>
-                               Directionality(textDirection: TextDirection.rtl,child: ClientLoanPage(
-                                uId: cubit.clients[index]['uid'],
-                              ))
-                              ));
-                        },
-                      ),
-                    ],
+                SizedBox(
+                  height: ScreenSizeUtil.screenHeight * 0.7,
+                  child: ListView.builder(
+                    itemCount: cubit.clients.length,
+                    itemBuilder: (context, index) {
+                      return ClientItem(cubit: cubit, index: index);
+                    },
                   ),
                 ),
-              );
-            },
+              ],
+            ),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              showAddClientDialog(context, cubit);
-            },
-            backgroundColor: Color(0xFF004F9F),
-            child: const Icon(
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: ClientsFloatingButton(cubit: cubit),
+        );
+      },
+    );
+  }
+}
+
+class ClientsFloatingButton extends StatelessWidget {
+  const ClientsFloatingButton({
+    super.key,
+    required this.cubit,
+  });
+
+  final ClientsCubit cubit;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 50,
+      width: 140,
+      child: FloatingActionButton(
+        onPressed: () {
+          showAddClientDialog(context, cubit);
+        },
+        backgroundColor: const Color(0xFF004F9F),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("إضافة زبون",
+                style: TextStyle(color: Colors.white, height: -0.2)),
+            SizedBox(width: 5,),
+            Icon(
               Icons.add,
               color: Colors.white,
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 }

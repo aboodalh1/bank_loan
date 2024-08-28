@@ -14,6 +14,16 @@ final class GetClientsFailure extends ClientsState {
 
 final class GetClientsLoading extends ClientsState {}
 
+final class GetLoanSuccess extends ClientsState {}
+
+final class GetLoanFailure extends ClientsState {
+  final String error;
+
+  GetLoanFailure({required this.error});
+}
+
+final class GetLoansLoading extends ClientsState {}
+
 final class InsertClientLoading extends ClientsState {}
 
 final class InsertClientSuccess extends ClientsState {}
@@ -51,3 +61,33 @@ final class EditClientFailure extends ClientsState {
 
   EditClientFailure({required this.error});
 }
+final class InsertLoanLoading extends ClientsState {}
+
+final class InsertLoanSuccess extends ClientsState {}
+
+final class InsertLoanFailure extends ClientsState {
+  final String error;
+
+  InsertLoanFailure({required this.error});
+}
+final class EditLoanLoading extends ClientsState {}
+
+final class EditLoanSuccess extends ClientsState {}
+
+final class EditLoanFailure extends ClientsState {
+  final String error;
+
+  EditLoanFailure({required this.error});
+}
+final class DeleteLoanLoading extends ClientsState {}
+
+final class DeleteLoanSuccess extends ClientsState {}
+
+final class DeleteLoanFailure extends ClientsState {
+  final String error;
+
+  DeleteLoanFailure({required this.error});
+}
+
+final class HideFab extends ClientsState{}
+final class ShowFab extends ClientsState{}

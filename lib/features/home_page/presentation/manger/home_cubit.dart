@@ -19,13 +19,13 @@ class HomeCubit extends Cubit<HomeState> {
 
   void hideBottomSheet() {
     isBottomSheetShown = false;
-    floatingIcon = Icon(Icons.add, color: Colors.white,);
+    floatingIcon = const Icon(Icons.add, color: Colors.white,);
     emit(ShowBottomSheetState());
   }
 
   void showBottomSheet() {
     isBottomSheetShown = true;
-    floatingIcon = Icon(Icons.edit, color: Colors.white,);
+    floatingIcon = const Icon(Icons.edit, color: Colors.white,);
 
     emit(ShowBottomSheetState());
   }
@@ -44,7 +44,7 @@ class HomeCubit extends Cubit<HomeState> {
       create: (context) =>
       ClientsCubit(getIt.get<ClientsRepoImpl>())
         ..createDataBase(),
-      child: ClientsScreen(),
+      child: const ClientsScreen(),
     )
   ];
 }

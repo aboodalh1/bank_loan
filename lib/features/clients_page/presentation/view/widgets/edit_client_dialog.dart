@@ -10,7 +10,7 @@ void showEditClientDialog(BuildContext context, ClientsCubit cubit,num id) {
         textDirection: TextDirection.rtl,
         child: AlertDialog(
           backgroundColor: Colors.white,
-          title: const Text('إضافة زبون جديد'),
+          title: const Text('تعديل معلومات الزبون'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -28,7 +28,7 @@ void showEditClientDialog(BuildContext context, ClientsCubit cubit,num id) {
               },
             ),
             TextButton(
-              child: const Text('إضافة', style: TextStyle(color: Color(0xFF004F9F))),
+              child: const Text('تعديل', style: TextStyle(color: Color(0xFF004F9F))),
               onPressed: () {
                 cubit.editClient(id: id);
                 Navigator.of(context).pop();
