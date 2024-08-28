@@ -25,7 +25,7 @@ Padding customTextField(context,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Text(label,style: TextStyle(fontFamily: 'Almarai'),),
+        Text(label,style: const TextStyle(fontFamily: 'Almarai'),),
         const SizedBox(height: 10,),
         SizedBox(
           width: ScreenSizeUtil.screenWidth*.5,
@@ -38,7 +38,7 @@ Padding customTextField(context,
             decoration: InputDecoration(
               suffixIcon: controller.text.isEmpty ? null : icon,
                 hintText: label,
-                hintStyle: TextStyle(fontFamily: 'Almarai',color: Colors.grey,),
+                hintStyle: const TextStyle(fontFamily: 'Almarai',color: Colors.grey,),
                 border: InputBorder.none,
                 fillColor: Colors.white,
                 filled: true,

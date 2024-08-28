@@ -33,3 +33,21 @@ final class DeleteClientFailure extends ClientsState {
 
   DeleteClientFailure({required this.error});
 }
+final class InitDataLoading extends ClientsState {}
+
+final class InitDataSuccess extends ClientsState {}
+
+final class InitDataFailure extends ClientsState {
+  final String error;
+
+  InitDataFailure({required this.error});
+}
+final class EditClientLoading extends ClientsState {}
+
+final class EditClientSuccess extends ClientsState {}
+
+final class EditClientFailure extends ClientsState {
+  final String error;
+
+  EditClientFailure({required this.error});
+}

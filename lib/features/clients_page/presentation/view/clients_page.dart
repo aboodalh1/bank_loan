@@ -1,10 +1,9 @@
 import 'package:bank_loan/core/widgets/custom_snack_bar/custom_snack_bar.dart';
-import 'package:bank_loan/features/clients_page/data/model/clients_model.dart';
 import 'package:bank_loan/features/clients_page/presentation/manger/clients_cubit.dart';
+import 'package:bank_loan/features/clients_page/presentation/view/claients_loan_page.dart';
 import 'package:bank_loan/features/clients_page/presentation/view/widgets/add_client_dialog.dart';
 import 'package:bank_loan/features/clients_page/presentation/view/widgets/delet_dialog.dart';
-import 'package:bank_loan/features/loan_page/presentation/manger/loan_cubit.dart';
-import 'package:bank_loan/features/loan_page/presentation/view/loan_screen.dart';
+import 'package:bank_loan/features/clients_page/presentation/view/widgets/edit_client_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,15 +20,25 @@ class ClientsScreen extends StatelessWidget {
         if (state is DeleteClientSuccess) {
           customSnackBar(context, 'تم حذف الزبون');
         }
+        if (state is EditClientSuccess) {
+          customSnackBar(context, 'تمت إضافة الزبون');
+        }
+        if (state is EditClientFailure ) {
+          customSnackBar(context, state.error.toString());
+        }
+
       },
       builder: (context, state) {
         var cubit = context.read<ClientsCubit>();
+        if(state is GetClientsLoading){
+          return Scaffold(body: SizedBox(height: 20,width: 20,child: CircularProgressIndicator(),),);
+        }
         return Scaffold(
           appBar: AppBar(
             title: const Text('العملاء'),
           ),
           body: ListView.builder(
-            itemCount: clients.length,
+            itemCount: cubit.clients.length,
             itemBuilder: (context, index) {
               return Container(
                 decoration: BoxDecoration(
@@ -48,7 +57,7 @@ class ClientsScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              clients[index]['clientName']!,
+                              cubit.clients[index]['clientName']!,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
@@ -57,7 +66,7 @@ class ClientsScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              clients[index]['date']!,
+                              cubit.clients[index]['date']!,
                               style: const TextStyle(color: Colors.white),
                             ),
                           ],
@@ -66,16 +75,19 @@ class ClientsScreen extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.edit, color: Colors.white),
                         tooltip: 'تعديل المعلومات',
-                        onPressed: () {},
+                        onPressed: () {
+                          showEditClientDialog(context,cubit,cubit.clients[index]['uid']);
+                        },
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete, color: Colors.white),
                         tooltip: 'حذف زبون',
                         onPressed: () {
+                          print(cubit.clients[index]['uid']);
                           showDeleteConfirmation(
                               context,
-                              clients[index]['clientName']!,
-                              clients[index]['uid'],
+                              cubit.clients[index]['clientName']!,
+                              cubit.clients[index]['uid'],
                               cubit);
                         },
                       ),
@@ -85,12 +97,10 @@ class ClientsScreen extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                               context, MaterialPageRoute(builder: (context) =>
-                              BlocProvider(
-                                create: (context) => LoanCubit(),
-                                child: Scaffold(body: Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: const LoanScreen())),
-                              )));
+                               Directionality(textDirection: TextDirection.rtl,child: ClientLoanPage(
+                                uId: cubit.clients[index]['uid'],
+                              ))
+                              ));
                         },
                       ),
                     ],

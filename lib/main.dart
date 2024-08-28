@@ -1,5 +1,4 @@
 import 'package:bank_loan/core/util/network/service_locator.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'bloc_observer.dart';
 import 'core/util/screen_size.dart';
@@ -22,8 +21,8 @@ class MyApp extends StatelessWidget {
     ScreenSizeUtil.initSize(context);
     return MaterialApp(
       theme: ThemeData(
-        colorScheme: ColorScheme.light(
-          primary: const Color(0xFF004F9F),
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFF004F9F),
         ),
         fontFamily: 'Almarai',
         scaffoldBackgroundColor: const Color(0xFFF7F7F7),

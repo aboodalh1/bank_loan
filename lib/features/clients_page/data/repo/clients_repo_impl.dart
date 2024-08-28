@@ -6,14 +6,28 @@ class ClientsRepoImpl implements ClientsRepo{
   final SqfliteHelper sqfliteHelper;
   ClientsRepoImpl(this.sqfliteHelper);
   @override
-  Future<void> createDataBase() async {
-    sqfliteHelper.createDataBase();
+  Future<Either<String,void>> initDB() async {
+    try{
+       await sqfliteHelper.intialDb();
+       return right(null);
+    }catch(e){
+        return left(e.toString());
+    }
   }
 
   @override
-  Future<Either<String,List<Map>>> getFromDB() async{
+  Future<Either<String,dynamic>> getAllClients() async{
     try{
-      var response = await sqfliteHelper.clientDB.rawQuery('SELECT * FROM client');
+      var response = await sqfliteHelper.readData('SELECT * FROM client');
+      return right(response);
+    }catch(e){
+      return left(e.toString());
+    }
+  }
+  @override
+  Future<Either<String,List<Map>>> getAllLoans({required num uId}) async{
+    try{
+      var response = await sqfliteHelper.readData('SELECT * FROM bank_loan WHERE uId = $uId');
       return right(response);
     }catch(e){
       return left(e.toString());
@@ -22,15 +36,22 @@ class ClientsRepoImpl implements ClientsRepo{
 
   @override
   Future<void> insertToClients({required String name, required String date}) async{
-    sqfliteHelper.insertToClient(name: name, date: date);
-    getFromDB();
+    sqfliteHelper.insertData('INSERT INTO client(clientName,date) VALUES("$name","$date")');
   }
 
   @override
-  Future<void> deleteData({required int id}) async{
-    sqfliteHelper.removeData(id: id);
-    getFromDB();
+  Future<Either<String,void>> editClient({required String name, required num id}) async{
+    try{
+      await sqfliteHelper.updateData(name: name ,id: id);
+      return right(null);
+    }catch(e){
+      return left(e.toString());
+    }
   }
 
+  @override
+  Future<void> deleteData({required num id}) async{
+    sqfliteHelper.deleteData(id: id);
+  }
 
 }

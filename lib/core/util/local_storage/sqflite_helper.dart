@@ -1,7 +1,30 @@
-import 'package:bank_loan/features/clients_page/data/model/clients_model.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../../../features/clients_page/data/model/loan_model.dart';
+// class SqfliteHelper {
+
+
+
+
+//   void updateClientData({required String name, required num id}) {
+//     clientDB!.rawUpdate('UPDATE task SET $clientName= ? WHERE $clientId =?',
+//         [name, '$id']).then((value) {});
+//   }
+//
+//   Future<void> insertToClient({
+//     required String name,
+//     required String date,
+//   }) async {
+//     clientDB!.transaction((txn) async {
+//       txn.rawInsert(
+//           'INSERT INTO $tableNameClient($clientName,date) VALUES("$name","$date")');
+//     });
+//   }
+//
+//   Future<void> removeData({required int id}) async {
+//     clientDB!
+//         .rawDelete('DELETE FROM $tableNameClient WHERE $clientId = ?', ['$id']);
+//   }
+// }
 
 class SqfliteHelper {
   static String tableName = "bank_loan";
@@ -14,85 +37,58 @@ class SqfliteHelper {
   static String monthNumber = 'monthNumber';
   static String paymentsNumber = 'paymentsNumber';
   static String customerId = 'customerId';
-  late Database clientDB;
+  static Database? clientDB ;
 
-  Future<void> createDataBase() async {
-    openDatabase(
-      databaseName,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute(
-            'Create Table $tableNameClient($clientId INTEGER PRIMARY KEY AUTOINCREMENT,$clientName TEXT,$date TEXT)');
-        await db.execute(
-            'Create Table $tableName(id INTEGER PRIMARY KEY AUTOINCREMENT,$amount TEXT,$monthNumber TEXT,$paymentsNumber INTEGER,$customerId INTEGER,FOREIGN KEY (customerId) REFERENCES customers(id) ON DELETE CASCADE)');
-      },
-      onOpen: (dBB) {
-        getClients(dBB);
-      },
-    ).then((value) {
-      clientDB = value;
-      getClients(clientDB);
-    });
+  Future<Database?> get db async {
+    if (clientDB == null){
+      clientDB  = await intialDb() ;
+      return clientDB ;
+    }else {
+      return clientDB ;
+    }
   }
 
-  void insertToLoan(
-      {required String amount,
-      required String monthNumber,
-      required String paymentsNumber,
-      required String customerId}) {
-    clientDB.transaction((txn) async {
-      txn.rawInsert(
-          'INSERT INTO $tableName($amount,$monthNumber,$paymentsNumber,$customerId) VALUES("amount","monthNumber","paymentsNumber","customerId")');
-    });
+
+  intialDb() async {
+    String databasepath = await getDatabasesPath() ;
+    String path = '$databasepath/wael.db' ;
+    Database mydb = await openDatabase(path , onCreate: _onCreate , version: 3  , onUpgrade:_onUpgrade ) ;
+    return mydb ;
   }
 
-  Future<void> getClients(DBB) async {
-    DBB.rawQuery('SELECT * FROM $tableNameClient').then((value) {
-      clients = [];
-      print(value);
-      Client? client;
-      if (clients.isEmpty) {
-        value.forEach((element) {
-          client = Client.fromMap(element);
-          clients.add(client!.toMap());
-        });
-      }
-    });
+  _onUpgrade(Database db , int oldversion , int newversion ) {
+
   }
 
-  Loan? loan;
+  _onCreate(Database db , int version) async {
+    await db.execute(
+        'Create Table $tableNameClient($clientId INTEGER PRIMARY KEY AUTOINCREMENT,$clientName TEXT,$date TEXT)');
+    await db.execute(
+        'Create Table $tableName(id INTEGER PRIMARY KEY AUTOINCREMENT,$date TEXT,$amount TEXT,$monthNumber TEXT,$paymentsNumber INTEGER,$customerId INTEGER,FOREIGN KEY (customerId) REFERENCES customers(id) ON DELETE CASCADE)');
 
-  Future<void> getLoan(DBB) async {
-    DBB.rawQuery('SELECT * FROM $tableName').then((value) {
-      value.forEach((element) {
-        loan = Loan.fromMap(element);
-        loans.add(loan!.toMap());
-      });
-    });
   }
 
-  void updateClientData({required String name, required num id}) {
-    clientDB.rawUpdate('UPDATE task SET $clientName= ? WHERE $clientId =?',
-        [name, '$id']).then((value) {
-      getClients(clientDB);
-    });
+  Future<List<Map>>readData(String sql) async {
+    Database? mydb = await db ;
+    List<Map> response = await  mydb!.rawQuery(sql);
+    print(response);
+    return response ;
   }
-
-  Future<void> insertToClient({
-    required String name,
-    required String date,
-  }) async {
-    clientDB.transaction((txn) async {
-      txn.rawInsert(
-          'INSERT INTO $tableNameClient($clientName,date) VALUES("$name","$date")');
-    });
-    getClients(clientDB);
+  insertData(String sql) async {
+    Database? mydb = await db ;
+    int  response = await  mydb!.rawInsert(sql);
+    return response ;
   }
-
-  Future<void> removeData({required int id}) async {
-    clientDB
-        .rawDelete('DELETE FROM $tableNameClient WHERE $clientId = ?', ['$id']);
-    getClients(clientDB);
+  updateData({required String name,required num id}) async {
+    Database? mydb = await db ;
+    int  response = await  mydb!.rawUpdate('UPDATE client SET $clientName= ? WHERE $clientId =?',['$name', '$id']);
+    return response ;
+  }
+  deleteData({required num id}) async {
+    Database? mydb = await db ;
+    int  response = await  mydb!.rawDelete('DELETE FROM client WHERE uid = ?', ['$id']);
+    print(response);
+    return response ;
   }
 
 }

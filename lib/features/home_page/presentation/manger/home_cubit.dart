@@ -44,10 +44,7 @@ class HomeCubit extends Cubit<HomeState> {
       create: (context) =>
       ClientsCubit(getIt.get<ClientsRepoImpl>())
         ..createDataBase(),
-      child: BlocProvider(
-        create: (context) => ClientsCubit(getIt.get<ClientsRepoImpl>())..createDataBase(),
-        child: ClientsScreen(),
-      ),
+      child: ClientsScreen(),
     )
   ];
 }

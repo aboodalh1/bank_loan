@@ -41,7 +41,7 @@ class LoanPaymentTable extends StatelessWidget {
                 DataRow(
                   color: MaterialStateColor.resolveWith((states) {
                     return index.isEven
-                        ? Color(0xFFF5F8FF) // Even row color
+                        ? const Color(0xFFF5F8FF) // Even row color
                         : Colors.white; // Odd row color
                   }),
                   cells: [
