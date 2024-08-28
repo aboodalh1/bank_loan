@@ -9,7 +9,6 @@ void customSnackBar(context,String text){
       behavior: SnackBarBehavior.floating,
       padding: const EdgeInsetsDirectional.all(10),
 
-
     ),
   );
 }

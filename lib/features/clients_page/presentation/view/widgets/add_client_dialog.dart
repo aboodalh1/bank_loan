@@ -1,27 +1,11 @@
+import 'package:bank_loan/core/widgets/custom_snack_bar/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../../core/util/screen_size.dart';
 import '../../manger/clients_cubit.dart';
-import 'package:flutter/services.dart';
 
-class AlphanumericAndArabicTextInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue,
-      TextEditingValue newValue,
-      ) {
-    final newText = newValue.text;
 
-    // Regular expression to include Arabic letters (ا-ي), Arabic digits (٠-٩), and Latin letters and digits
-    final filteredText = newText.replaceAll(RegExp(r'[^a-zA-Z0-9ا-ي٠-٩]'), '');
-
-    return newValue.copyWith(
-      text: filteredText,
-      selection: TextSelection.collapsed(offset: filteredText.length),
-    );
-  }
-}
 void showAddClientDialog(BuildContext context, ClientsCubit cubit) {
   showDialog(
     context: context,
@@ -35,14 +19,16 @@ void showAddClientDialog(BuildContext context, ClientsCubit cubit) {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                inputFormatters: [
-         AlphanumericAndArabicTextInputFormatter()
-                ],
+                onChanged: (val){
+                  if(val.length>=30){
+                    customSnackBar(context, 'لا يمكن للاسم أن يكون اكثر من 30 حرف');
+                  }
+
+                },
                 controller: cubit.nameController,
                 decoration:  InputDecoration(labelText: 'اسم الزبون',labelStyle: TextStyle(fontSize: ScreenSizeUtil.screenWidth * 0.04)),
               ),
               TextField(
-
                 style: TextStyle(fontSize: ScreenSizeUtil.screenWidth * 0.04),
                 onTap: ()async{
                   final DateTime ? picked= await showDatePicker(

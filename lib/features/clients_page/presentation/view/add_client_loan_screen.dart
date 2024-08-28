@@ -17,6 +17,7 @@ class AddClientLoanScreen extends StatelessWidget {
 
   final num id;
 
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoanCubit, LoanState>(
@@ -42,6 +43,7 @@ class AddClientLoanScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: customTextField(
+                            hintText:'مبلغ القرض' ,
                             isBenefit: false,
                             onChanged: (val) {
                               if (val.length > 1) {
@@ -75,6 +77,7 @@ class AddClientLoanScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: customTextField(
+                            hintText: '20',
                             isBenefit: true,
                             isEnabled: false,
                             context,
@@ -172,7 +175,6 @@ class AddClientLoanScreen extends StatelessWidget {
                                       paymentsNumber: 0,
                                       date: intl.DateFormat('yyyy-MM-dd').format(DateTime.now()).toString(),
                                     );
-
                                   });
                             },
                           )

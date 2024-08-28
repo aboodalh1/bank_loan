@@ -57,8 +57,8 @@ class ClientsCubit extends Cubit<ClientsState> {
   }
 
   Future<void> getClientLoans({required num uId}) async {
-    emit(GetLoansLoading());
     loans.clear();
+    emit(GetLoansLoading());
     var result = await clientsRepo.getAllLoans(uId: uId);
     result.fold((error) {
       emit(GetLoanFailure(error: error.toString()));
@@ -72,17 +72,21 @@ class ClientsCubit extends Cubit<ClientsState> {
 
   Future<void> insertClient() async {
     if (nameController.text.isNotEmpty && dateController.text.isNotEmpty ) {
-      emit(InsertClientLoading());
-      await clientsRepo
-          .insertToClients(name: nameController.text, date: dateController.text)
-          .then((value) {
-        nameController.clear();
-        dateController.clear();
-        getClients();
-        emit(InsertClientSuccess());
-      }).catchError((e) {
-        emit(InsertClientFailure(error: e.toString()));
-      });
+      if(nameController.text.length < 30 && nameController.text.length>=2){
+        emit(InsertClientLoading());
+        await clientsRepo
+            .insertToClients(name: nameController.text, date: dateController.text)
+            .then((value) {
+          nameController.clear();
+          dateController.clear();
+          getClients();
+          emit(InsertClientSuccess());
+        }).catchError((e) {
+          emit(InsertClientFailure(error: e.toString()));
+        });
+      }else{
+        emit(InsertClientFailure(error: 'لا يمكن للإسم أن يكون اكثر من 30 حرف و أقل من ثلاث أحرف'));
+      }
     } else {
       emit(InsertClientFailure(error: "جميع الحقول مطلوبة"));
     }

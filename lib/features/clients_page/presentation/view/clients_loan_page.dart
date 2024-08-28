@@ -1,3 +1,4 @@
+import 'package:bank_loan/core/util/shared/theme.dart';
 import 'package:bank_loan/core/widgets/custom_snack_bar/custom_snack_bar.dart';
 import 'package:bank_loan/features/clients_page/presentation/view/widgets/custom_floating_button.dart';
 import 'package:bank_loan/features/clients_page/presentation/view/widgets/empty_loan_screen.dart';
@@ -26,14 +27,14 @@ class ClientLoanPage extends StatelessWidget {
       },
       builder: (context, state) {
         if(state is GetLoansLoading){
-          return Scaffold(body: const Center(child: CircularProgressIndicator()));
+          return Scaffold(body:  Center(child: CircularProgressIndicator(color: defaultColor,)));
         }
         return Scaffold(
             floatingActionButtonLocation:
             FloatingActionButtonLocation.centerFloat,
             floatingActionButton: Padding(
               padding: const EdgeInsets.all(10),
-              child: CustomFloatingButton(uId: uId),
+              child: CustomFloatingButton(uId: uId,cubit: cubit,),
             ),
             appBar: AppBar(
               title: Text("قروض $clientName",style: TextStyle(fontSize:ScreenSizeUtil.screenWidth * 0.04),),

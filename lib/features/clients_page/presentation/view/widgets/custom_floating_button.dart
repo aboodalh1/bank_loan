@@ -2,10 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/util/network/service_locator.dart';
 import '../../../../../core/util/screen_size.dart';
 import '../../../../loan_page/presentation/manger/loan_cubit.dart';
-import '../../../data/repo/clients_repo_impl.dart';
 import '../../manger/clients_cubit.dart';
 import '../add_client_loan_screen.dart';
 
@@ -13,9 +11,11 @@ class CustomFloatingButton extends StatelessWidget {
   const CustomFloatingButton({
     super.key,
     required this.uId,
+    required this.cubit,
   });
 
   final num uId;
+  final ClientsCubit cubit;
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +30,15 @@ class CustomFloatingButton extends StatelessWidget {
                 builder: (context) =>
                     MultiBlocProvider(
                       providers: [
-                        BlocProvider(
-                          create:(context)=> ClientsCubit(
-                              getIt.get<ClientsRepoImpl>()),
+                        BlocProvider.value(
+                          value: cubit,
                         ),
                         BlocProvider(
                           create: (context) => LoanCubit(),
                         ),
                       ],
                       child: AddClientLoanScreen(
+
                         id: uId,
                       ),
                     )),

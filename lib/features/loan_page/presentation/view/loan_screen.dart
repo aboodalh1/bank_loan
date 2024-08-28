@@ -35,6 +35,7 @@ class LoanScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: customTextField(
+                    hintText: 'مبلغ القرض' ,
                     isBenefit: false,
                     onChanged: (val){
                       if(val.length>1){cubit.checkLoanAmount();}
@@ -68,6 +69,7 @@ class LoanScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: customTextField(
+                    hintText: 'نسبة الفائدة (%)',
                     isBenefit: true,
                     context,
                     controller:

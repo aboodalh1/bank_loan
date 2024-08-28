@@ -202,6 +202,10 @@ class LoanCubit extends Cubit<LoanState> {
   }
 
   void saveAsPdf(BuildContext context) async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      status = await Permission.storage.request();
+    }
     final pdf = pw.Document();
     var fontdata = await rootBundle.load("assets/fonts/Almarai-Bold.ttf");
     // Create the PDF content
@@ -274,7 +278,8 @@ class LoanCubit extends Cubit<LoanState> {
       ),
     );
 
-    if (await Permission.storage.request().isGranted) {
+    if (status.isGranted) {
+
       String? downloadPath = await FilePicker.platform.getDirectoryPath();
       if (downloadPath != null) {
         final file = File(
@@ -298,6 +303,10 @@ class LoanCubit extends Cubit<LoanState> {
   }
 
   void saveAsXls(BuildContext context) async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      status = await Permission.storage.request();
+    }
     var excel = Excel.createExcel();
     Sheet sheetObject = excel['Sheet1'];
     List<CellValue> headers = [
@@ -327,7 +336,7 @@ class LoanCubit extends Cubit<LoanState> {
                 monthlyOverallPayment.round()))
       ], i + 1);
     }
-    if (await Permission.storage.request().isGranted) {
+    if (status.isGranted) {
       String? downloadPath = await FilePicker.platform.getDirectoryPath();
       if (downloadPath != null) {
         final file = File(

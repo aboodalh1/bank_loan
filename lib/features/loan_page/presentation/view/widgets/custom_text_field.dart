@@ -29,7 +29,7 @@ class CustomNumberFormatter1 extends TextInputFormatter {
   }
 }
 Padding customTextField(context,
-    {bool? isBenefit,bool? isEnabled,ValueChanged<String>? onChanged,Icon? icon,required String label, required TextEditingController controller}) {
+    {bool? isBenefit,bool? isEnabled,ValueChanged<String>? onChanged,Icon? icon,required String label,required String hintText, required TextEditingController controller}) {
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: Column(
@@ -50,7 +50,7 @@ Padding customTextField(context,
             style: TextStyle(fontFamily: 'Almarai',color: Colors.black87,fontSize: ScreenSizeUtil.screenWidth*0.040),
             decoration: InputDecoration(
               suffixIcon: controller.text.isEmpty ? null : icon,
-                hintText: label,
+                hintText: hintText,
                 hintStyle: TextStyle(fontFamily: 'Almarai',color: Colors.grey,fontSize: ScreenSizeUtil.screenWidth*0.040),
                 border: InputBorder.none,
                 fillColor: Colors.white,
