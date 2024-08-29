@@ -1,9 +1,8 @@
 import 'package:bank_loan/core/widgets/custom_snack_bar/custom_snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import '../../../../../core/util/screen_size.dart';
-import '../../manger/clients_cubit.dart';
+import '../../../../../../core/util/screen_size.dart';
+import '../../../manger/clients_cubit.dart';
 
 
 void showAddClientDialog(BuildContext context, ClientsCubit cubit) {

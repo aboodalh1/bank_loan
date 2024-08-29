@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../manger/clients_cubit.dart';
+import '../../../manger/clients_cubit.dart';
 
 class ClientsSearchBar extends StatelessWidget {
   const ClientsSearchBar({

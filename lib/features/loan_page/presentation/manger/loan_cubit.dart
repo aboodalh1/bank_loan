@@ -28,6 +28,7 @@ class LoanCubit extends Cubit<LoanState> {
     return int.parse(monthNumberController.text);
   }
 
+
   bool isTableShown = false;
   double monthlyOverallPayment = 0.0;
   double loanAmountWithBenefit = 0.0;
@@ -126,7 +127,7 @@ class LoanCubit extends Cubit<LoanState> {
 
   void printTable(BuildContext context) async {
     final pdf = pw.Document();
-    var fontdata = await rootBundle.load("assets/fonts/Almarai-Bold.ttf");
+    var fontData = await rootBundle.load("assets/fonts/Almarai-Bold.ttf");
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
@@ -177,7 +178,7 @@ class LoanCubit extends Cubit<LoanState> {
                       },
                     ),
                     headerStyle: pw.TextStyle(
-                        font: pw.Font.ttf(fontdata), color: PdfColors.white),
+                        font: pw.Font.ttf(fontData), color: PdfColors.white),
                     headerDecoration:
                         const pw.BoxDecoration(color: PdfColors.blue),
                     cellHeight: 30,
@@ -208,7 +209,6 @@ class LoanCubit extends Cubit<LoanState> {
     }
     final pdf = pw.Document();
     var fontdata = await rootBundle.load("assets/fonts/Almarai-Bold.ttf");
-    // Create the PDF content
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
@@ -285,7 +285,6 @@ class LoanCubit extends Cubit<LoanState> {
         final file = File(
             "$downloadPath/LoanPaymentTable_${DateTime.now().toIso8601String()}.pdf");
         await file.writeAsBytes(await pdf.save());
-        // Notify the user of the successful save
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('PDF saved to ${file.path}')),
         );

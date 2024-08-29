@@ -72,7 +72,7 @@ class ClientsCubit extends Cubit<ClientsState> {
 
   Future<void> insertClient() async {
     if (nameController.text.isNotEmpty && dateController.text.isNotEmpty ) {
-      if(nameController.text.length < 30 && nameController.text.length>=2){
+      if(nameController.text.length < 30 && nameController.text.length>2){
         emit(InsertClientLoading());
         await clientsRepo
             .insertToClients(name: nameController.text, date: dateController.text)

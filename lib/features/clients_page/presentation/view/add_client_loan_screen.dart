@@ -1,6 +1,6 @@
 import 'package:bank_loan/core/widgets/custom_snack_bar/custom_snack_bar.dart';
 import 'package:bank_loan/features/clients_page/presentation/manger/clients_cubit.dart';
-import 'package:bank_loan/features/clients_page/presentation/view/widgets/client_loan_details.dart';
+import 'package:bank_loan/features/clients_page/presentation/view/widgets/loan/client_loan_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/util/screen_size.dart';
@@ -8,7 +8,7 @@ import '../../../loan_page/presentation/manger/loan_cubit.dart';
 import '../../../loan_page/presentation/view/widgets/custom_circled_button.dart';
 import '../../../loan_page/presentation/view/widgets/custom_text_field.dart';
 import '../../../loan_page/presentation/view/widgets/custom_drop_down.dart';
-import '../../../loan_page/presentation/view/widgets/loan_table_payments.dart';
+import '../../../loan_page/presentation/view/widgets/loan_payments_table/loan_payments_table.dart';
 import 'package:intl/intl.dart' as intl;
 import '../../../loan_page/presentation/view/widgets/results_card.dart';
 
@@ -16,7 +16,6 @@ class AddClientLoanScreen extends StatelessWidget {
   const AddClientLoanScreen({super.key, required this.id});
 
   final num id;
-
 
   @override
   Widget build(BuildContext context) {
@@ -155,6 +154,7 @@ class AddClientLoanScreen extends StatelessWidget {
                                 customSnackBar(context, state.error);
                               }
                               if (state is InsertLoanSuccess) {
+
                                 customSnackBar(context, 'تمت إضافة القرض');
                                 Navigator.pop(context);
                               }
@@ -195,15 +195,7 @@ class AddClientLoanScreen extends StatelessWidget {
                               child: Column(
                                 children: [
                                   LoanPaymentTable(
-                                    monthNumber: cubit.monthNumber(),
-                                    monthlyOverallPayment:
-                                        cubit.monthlyOverallPayment,
-                                    loanAmountWithBenefit:
-                                        cubit.loanAmountWithBenefit,
-                                    monthlyBenefitPayment:
-                                        cubit.calcMonthlyBenefitPayment(),
-                                    monthlyLoanPayment:
-                                        cubit.calcLoanMonthlyPayment(),
+                                 cubit: cubit,
                                   ),
                                 ],
                               ),

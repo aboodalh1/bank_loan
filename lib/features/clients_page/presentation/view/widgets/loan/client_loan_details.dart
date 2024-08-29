@@ -2,11 +2,11 @@ import 'package:bank_loan/core/util/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/util/screen_size.dart';
-import '../../../../loan_page/presentation/manger/loan_cubit.dart';
-import '../../../../loan_page/presentation/view/widgets/custom_circled_button.dart';
-import '../../../../loan_page/presentation/view/widgets/loan_table_payments.dart';
-import '../../../../loan_page/presentation/view/widgets/results_card.dart';
+import '../../../../../../core/util/screen_size.dart';
+import '../../../../../loan_page/presentation/manger/loan_cubit.dart';
+import '../../../../../loan_page/presentation/view/widgets/custom_circled_button.dart';
+import '../../../../../loan_page/presentation/view/widgets/loan_payments_table/loan_payments_table.dart';
+import '../../../../../loan_page/presentation/view/widgets/results_card.dart';
 
 class ClientLoanDetails extends StatefulWidget {
   const ClientLoanDetails(
@@ -127,26 +127,12 @@ class _ClientLoanDetailsState extends State<ClientLoanDetails> {
                         child: Column(
                           children: [
                             TableButtonsRow(),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.blueGrey,
-                              ),
-                              child: Column(
-                                children: [
-                                  LoanPaymentTable(
-                                    monthNumber: cubit.monthNumber(),
-                                    monthlyOverallPayment:
-                                        cubit.monthlyOverallPayment,
-                                    loanAmountWithBenefit:
-                                        cubit.loanAmountWithBenefit,
-                                    monthlyBenefitPayment:
-                                        cubit.calcMonthlyBenefitPayment(),
-                                    monthlyLoanPayment:
-                                        cubit.calcLoanMonthlyPayment(),
-                                  ),
-                                ],
-                              ),
+                            Column(
+                              children: [
+                                LoanPaymentTable(
+                                  cubit: cubit,
+                                ),
+                              ],
                             ),
                           ],
                         ),

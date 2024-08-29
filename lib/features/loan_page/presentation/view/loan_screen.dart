@@ -1,7 +1,8 @@
+import 'package:bank_loan/features/clients_page/presentation/view/widgets/loan/client_loan_details.dart';
 import 'package:bank_loan/features/loan_page/presentation/view/widgets/custom_circled_button.dart';
 import 'package:bank_loan/features/loan_page/presentation/view/widgets/custom_text_field.dart';
 import 'package:bank_loan/features/loan_page/presentation/view/widgets/custom_drop_down.dart';
-import 'package:bank_loan/features/loan_page/presentation/view/widgets/loan_table_payments.dart';
+import 'package:bank_loan/features/loan_page/presentation/view/widgets/loan_payments_table/loan_payments_table.dart';
 import 'package:bank_loan/features/loan_page/presentation/view/widgets/results_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -138,58 +139,13 @@ class LoanScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    TableButtonsRow(),
+                    Column(
                       children: [
-                        IconButton(
-                          icon: const Icon(Icons.print,
-                              color: Colors.black),
-                          onPressed: () {
-                            context
-                                .read<LoanCubit>()
-                                .printTable(context);
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.picture_as_pdf,
-                              color: Colors.red),
-                          onPressed: () {
-                            context
-                                .read<LoanCubit>()
-                                .saveAsPdf(context);
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.table_chart,
-                              color: Colors.green),
-                          onPressed: () {
-                            context
-                                .read<LoanCubit>()
-                                .saveAsXls(context);
-                          },
+                        LoanPaymentTable(
+                          cubit: cubit,
                         ),
                       ],
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.blueGrey,
-                      ),
-                      child: Column(
-                        children: [
-                          LoanPaymentTable(
-                            monthNumber: cubit.monthNumber(),
-                            monthlyOverallPayment:
-                            cubit.monthlyOverallPayment,
-                            loanAmountWithBenefit:
-                            cubit.loanAmountWithBenefit,
-                            monthlyBenefitPayment:
-                            cubit.calcMonthlyBenefitPayment(),
-                            monthlyLoanPayment:
-                            cubit.calcLoanMonthlyPayment(),
-                          ),
-                        ],
-                      ),
                     ),
                   ],
                 ),

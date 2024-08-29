@@ -1,14 +1,14 @@
-import 'package:bank_loan/features/clients_page/presentation/view/widgets/add_client_dialog.dart';
+import 'package:bank_loan/features/clients_page/presentation/view/widgets/client/add_client_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/util/network/service_locator.dart';
-import '../../../../../core/util/screen_size.dart';
-import '../../../../loan_page/presentation/manger/loan_cubit.dart';
-import '../../../../loan_page/presentation/view/widgets/custom_circled_button.dart';
-import '../../../data/repo/clients_repo_impl.dart';
-import '../../manger/clients_cubit.dart';
-import '../add_client_loan_screen.dart';
+import '../../../../../../core/util/network/service_locator.dart';
+import '../../../../../../core/util/screen_size.dart';
+import '../../../../../loan_page/presentation/manger/loan_cubit.dart';
+import '../../../../../loan_page/presentation/view/widgets/custom_circled_button.dart';
+import '../../../../data/repo/clients_repo_impl.dart';
+import '../../../manger/clients_cubit.dart';
+import '../../add_client_loan_screen.dart';
 
 class EmptyLoanScreen extends StatelessWidget {
   const EmptyLoanScreen({

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../manger/clients_cubit.dart';
-import '../clients_loan_page.dart';
-import 'delete_dialog.dart';
+import '../../../manger/clients_cubit.dart';
+import '../../clients_loan_page.dart';
+import '../delete_dialog.dart';
 import 'edit_client_dialog.dart';
 
 class ClientItem extends StatelessWidget {

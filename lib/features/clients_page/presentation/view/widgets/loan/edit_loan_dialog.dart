@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-import '../../manger/clients_cubit.dart';
+import '../../../manger/clients_cubit.dart';
 
-void showEditClientDialog(BuildContext context, ClientsCubit cubit,num id) {
+void showEditLoanDialog(BuildContext context, ClientsCubit cubit,num id,num costumerId) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -10,13 +11,17 @@ void showEditClientDialog(BuildContext context, ClientsCubit cubit,num id) {
         textDirection: TextDirection.rtl,
         child: AlertDialog(
           backgroundColor: Colors.white,
-          title: const Text('تعديل معلومات الزبون'),
+          title: const Text('تعديل عدد الدفعات'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: cubit.editNameController,
-                decoration: const InputDecoration(labelText: 'اسم الزبون'),
+                inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d{0,9}(\.\d{0,2})?$'))
+                ],
+                keyboardType: TextInputType.number,
+                controller: cubit.paymentsController,
+                decoration: const InputDecoration(labelText: 'عدد الدفعات'),
               ),
             ],
           ),
@@ -30,7 +35,7 @@ void showEditClientDialog(BuildContext context, ClientsCubit cubit,num id) {
             TextButton(
               child: const Text('تعديل', style: TextStyle(color: Color(0xFF004F9F))),
               onPressed: () {
-                cubit.editClient(id: id);
+                cubit.editLoan(id: id,paymentsNumber: num.parse(cubit.paymentsController.text),costumerId: costumerId);
                 Navigator.of(context).pop();
               },
             ),

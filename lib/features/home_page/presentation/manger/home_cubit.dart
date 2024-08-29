@@ -12,23 +12,11 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
-  var scaffoldKey = GlobalKey<ScaffoldState>();
   int currentIndex = 0;
-  bool isBottomSheetShown = false;
-  Icon floatingIcon = const Icon(Icons.add, color: Colors.white,);
-
-  void hideBottomSheet() {
-    isBottomSheetShown = false;
-    floatingIcon = const Icon(Icons.add, color: Colors.white,);
-    emit(ShowBottomSheetState());
-  }
-
-  void showBottomSheet() {
-    isBottomSheetShown = true;
-    floatingIcon = const Icon(Icons.edit, color: Colors.white,);
-
-    emit(ShowBottomSheetState());
-  }
+  Icon floatingIcon = const Icon(
+    Icons.add,
+    color: Colors.white,
+  );
 
   void changeBottomNavBar(int index) {
     currentIndex = index;
@@ -42,8 +30,7 @@ class HomeCubit extends Cubit<HomeState> {
     ),
     BlocProvider(
       create: (context) =>
-      ClientsCubit(getIt.get<ClientsRepoImpl>())
-        ..createDataBase(),
+          ClientsCubit(getIt.get<ClientsRepoImpl>())..createDataBase(),
       child: const ClientsScreen(),
     )
   ];

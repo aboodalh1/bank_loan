@@ -15,7 +15,6 @@ class HomePage extends StatelessWidget {
         builder: (context, state) {
           var cubit = context.read<HomeCubit>();
           return Scaffold(
-              key: cubit.scaffoldKey,
               bottomNavigationBar: CustomBottomNavBar(
                 cubit: cubit,
               ),

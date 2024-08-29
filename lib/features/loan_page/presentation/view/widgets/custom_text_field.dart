@@ -18,7 +18,7 @@ class CustomNumberFormatter extends TextInputFormatter {
 class CustomNumberFormatter1 extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    final regExp = RegExp(r'^\d{0,3}(\.\d{0,2})?$');
+    final regExp = RegExp(r'^\d{0,2}(\.\d{0,2})?$');
 
     if (regExp.hasMatch(newValue.text)) {
       return newValue;

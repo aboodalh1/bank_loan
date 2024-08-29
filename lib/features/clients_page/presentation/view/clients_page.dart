@@ -1,9 +1,10 @@
 import 'package:bank_loan/core/util/screen_size.dart';
 import 'package:bank_loan/core/widgets/custom_snack_bar/custom_snack_bar.dart';
 import 'package:bank_loan/features/clients_page/presentation/manger/clients_cubit.dart';
-import 'package:bank_loan/features/clients_page/presentation/view/widgets/add_client_dialog.dart';
-import 'package:bank_loan/features/clients_page/presentation/view/widgets/client_item.dart';
-import 'package:bank_loan/features/clients_page/presentation/view/widgets/clients_search_bar.dart';
+import 'package:bank_loan/features/clients_page/presentation/view/widgets/client/add_client_dialog.dart';
+import 'package:bank_loan/features/clients_page/presentation/view/widgets/client/client_item.dart';
+import 'package:bank_loan/features/clients_page/presentation/view/widgets/client/clients_search_bar.dart';
+import 'package:bank_loan/features/clients_page/presentation/view/widgets/custom_floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -59,49 +60,13 @@ class ClientsScreen extends StatelessWidget {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: ClientsFloatingButton(cubit: cubit),
+          floatingActionButton: CustomFloatingButton(
+              onPressed: () {
+                showAddClientDialog(context, cubit);
+              },
+              label: "إضافة زبون"),
         );
       },
-    );
-  }
-}
-
-class ClientsFloatingButton extends StatelessWidget {
-  const ClientsFloatingButton({
-    super.key,
-    required this.cubit,
-  });
-
-  final ClientsCubit cubit;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      width: 140,
-      child: FloatingActionButton(
-        onPressed: () {
-          showAddClientDialog(context, cubit);
-        },
-        backgroundColor: const Color(0xFF004F9F),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("إضافة زبون",
-                style: TextStyle(
-                    color: Colors.white,
-                    height: -0.2,
-                    fontSize: ScreenSizeUtil.screenWidth * 0.04)),
-            SizedBox(
-              width: 5,
-            ),
-            Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
