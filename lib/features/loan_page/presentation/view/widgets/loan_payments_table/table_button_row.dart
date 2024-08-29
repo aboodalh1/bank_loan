@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../manger/loan_cubit.dart';
+
 
 class TableButtonsRow extends StatelessWidget {
   const TableButtonsRow({

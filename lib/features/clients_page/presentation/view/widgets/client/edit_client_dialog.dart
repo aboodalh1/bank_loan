@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../manger/clients_cubit.dart';
 
 void showEditClientDialog(BuildContext context, ClientsCubit cubit,num id) {

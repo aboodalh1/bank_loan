@@ -14,7 +14,7 @@ class ClientLoanDetails extends StatefulWidget {
       required this.id,
       required this.amount,
       required this.benefit,
-      required this.paymentsNumbr,
+      required this.paymentsNumber,
       required this.date,
       required this.monthNumber});
 
@@ -22,7 +22,7 @@ class ClientLoanDetails extends StatefulWidget {
   final String amount;
   final String benefit;
   final String monthNumber;
-  final String paymentsNumbr;
+  final String paymentsNumber;
   final String date;
 
   @override
@@ -83,7 +83,7 @@ class _ClientLoanDetailsState extends State<ClientLoanDetails> {
                           padding: const EdgeInsets.all(2.0),
                           child: CustomText(
                             label:
-                                '  الدفعات المنتهية: ${widget.paymentsNumbr}',
+                                '  الدفعات المنتهية: ${widget.paymentsNumber}',
                           ),
                         ),
                         Padding(

@@ -17,7 +17,7 @@ void showEditLoanDialog(BuildContext context, ClientsCubit cubit,num id,num cost
             children: [
               TextField(
                 inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d{0,9}(\.\d{0,2})?$'))
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d{0,2}(\.\d{0,2})?$'))
                 ],
                 keyboardType: TextInputType.number,
                 controller: cubit.paymentsController,

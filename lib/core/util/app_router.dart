@@ -7,30 +7,35 @@
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:go_router/go_router.dart';
-//
 // import '../../features/clients_page/presentation/view/clients_loan_page.dart';
 // import '../../features/loan_page/presentation/manger/loan_cubit.dart';
 //
+//
 // abstract class AppRouter {
-//   static const kClientsPage = 'clientsPage';
-//   static const kClientsLoan = 'clientsLoan';
-//   static const kAddClientsLoan = 'addClientsLoan';
-//   static final router = GoRouter(routes: [
+//   static const kClientsPage = '/clientsPage';
+//   static const kClientsLoan = '/clientsLoan';
+//   static const kAddClientsLoan = '/addClientsLoan';
+//
+//   static final router = GoRouter(
+//
+//       initialLocation: '/',
+//       routes: [
 //     GoRoute(
 //         path: '/',
+//
 //         builder: (context, state) => BlocProvider(
 //               create: (context) => LoanCubit(),
 //               child: const Directionality(
 //                   textDirection: TextDirection.rtl, child: HomePage()),
 //             )),
 //     GoRoute(
-//         path: '/$kClientsPage',
+//         path: '$kClientsPage',
 //         builder: (context, state) => BlocProvider(
 //               create: (context) => ClientsCubit(getIt.get<ClientsRepoImpl>()),
 //               child: ClientsScreen(),
 //             )),
 //     GoRoute(
-//       path: '/$kClientsLoan/:clientName/:uId',
+//       path: '$kClientsLoan/:clientName/:uId',
 //       builder: (context, state) {
 //         final String clientName = state.pathParameters['clientName']!;
 //         final String uId = state.pathParameters['uId']!;
@@ -41,13 +46,14 @@
 //             child: ClientLoanPage(
 //               clientName: clientName,
 //               uId: num.parse(uId),
+//               cubit: context.read<ClientsCubit>(),
 //             ),
 //           ),
 //         );
 //       },
 //     ),
 //     GoRoute(
-//       path: '/$kAddClientsLoan/:id',
+//       path: '$kAddClientsLoan/:id',
 //       builder: (context, state) {
 //         final String id = state.pathParameters['id']!;
 //         return MultiBlocProvider(
@@ -58,6 +64,7 @@
 //             BlocProvider(
 //               create: (context) => LoanCubit(),
 //             ),
+//
 //           ],
 //           child: Directionality(
 //             textDirection: TextDirection.rtl,

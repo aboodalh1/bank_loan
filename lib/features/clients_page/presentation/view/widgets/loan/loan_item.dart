@@ -109,7 +109,7 @@ class LoanItem extends StatelessWidget {
                                   body: Directionality(
                                       textDirection: TextDirection.rtl,
                                       child: ClientLoanDetails(
-                                        paymentsNumbr:
+                                        paymentsNumber:
                                             '${cubit.loans[index]['paymentsNumber']}',
                                         date: '${cubit.loans[index]['date']}',
                                         monthNumber:

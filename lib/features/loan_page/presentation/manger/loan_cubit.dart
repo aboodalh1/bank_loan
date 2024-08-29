@@ -28,7 +28,6 @@ class LoanCubit extends Cubit<LoanState> {
     return int.parse(monthNumberController.text);
   }
 
-
   bool isTableShown = false;
   double monthlyOverallPayment = 0.0;
   double loanAmountWithBenefit = 0.0;
@@ -128,15 +127,93 @@ class LoanCubit extends Cubit<LoanState> {
   void printTable(BuildContext context) async {
     final pdf = pw.Document();
     var fontData = await rootBundle.load("assets/fonts/Almarai-Bold.ttf");
+    int monthCount = monthNumber();
+    int splitIndex = 24;
+    List<List<String>> generateData(int start, int end) {
+      return List<List<String>>.generate(
+        end - start,
+        (index) {
+          final actualIndex = start + index;
+          final paymentNumber = (actualIndex + 1).toString();
+          final totalPayments = NumberFormat("#,##0").format(
+              loanAmountWithBenefit -
+                  (actualIndex * monthlyOverallPayment).round());
+          final principal =
+              NumberFormat("#,##0").format(monthlyOverallPayment.round());
+          final interest =
+              NumberFormat("#,##0").format(calcMonthlyBenefitPayment().round());
+          final balance =
+              NumberFormat("#,##0").format(calcLoanMonthlyPayment().round());
+          final remainingAmount = NumberFormat("#,##0").format(
+              (loanAmountWithBenefit - (actualIndex * monthlyOverallPayment)) -
+                  monthlyOverallPayment.round());
+          return [
+            paymentNumber,
+            totalPayments,
+            principal,
+            interest,
+            balance,
+            remainingAmount
+          ];
+        },
+      );
+    }
+
+    // Add first page
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
           return pw.Directionality(
+            textDirection: pw.TextDirection.rtl,
+            child: pw.Column(
+              children: [
+                pw.Text(
+                  "Loan Payment Table - Page 1",
+                  style: pw.TextStyle(
+                      fontSize: 24, fontWeight: pw.FontWeight.bold),
+                ),
+                pw.SizedBox(height: 20),
+                pw.TableHelper.fromTextArray(
+                  headers: [
+                    'رقم الدفعة',
+                    'مجموع الدفعات',
+                    'الأساسي',
+                    'الفائدة',
+                    'الرصيد',
+                    'المبلغ المتبقي'
+                  ],
+                  data: generateData(
+                      0, monthCount > splitIndex ? splitIndex : monthCount),
+                  headerStyle: pw.TextStyle(
+                      font: pw.Font.ttf(fontData), color: PdfColors.white),
+                  headerDecoration:
+                      const pw.BoxDecoration(color: PdfColors.blue),
+                  cellAlignments: {
+                    0: pw.Alignment.centerRight,
+                    1: pw.Alignment.centerRight,
+                    2: pw.Alignment.centerRight,
+                    3: pw.Alignment.centerRight,
+                    4: pw.Alignment.centerRight,
+                    5: pw.Alignment.centerRight,
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    if (monthCount > splitIndex) {
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.Directionality(
               textDirection: pw.TextDirection.rtl,
               child: pw.Column(
                 children: [
                   pw.Text(
-                    "Loan Payment Table",
+                    "Loan Payment Table - Page 2",
                     style: pw.TextStyle(
                         fontSize: 24, fontWeight: pw.FontWeight.bold),
                   ),
@@ -150,38 +227,11 @@ class LoanCubit extends Cubit<LoanState> {
                       'الرصيد',
                       'المبلغ المتبقي'
                     ],
-                    data: List<List<String>>.generate(
-                      monthNumber(),
-                      (index) {
-                        final paymentNumber = (index + 1).toString();
-                        final totalPayments = NumberFormat("#,##0").format(
-                            loanAmountWithBenefit -
-                                (index * monthlyOverallPayment).round());
-                        final principal = NumberFormat("#,##0")
-                            .format(monthlyOverallPayment.round());
-                        final interest = NumberFormat("#,##0")
-                            .format(calcMonthlyBenefitPayment().round());
-                        final balance = NumberFormat("#,##0")
-                            .format(calcLoanMonthlyPayment().round());
-                        final remainingAmount = NumberFormat("#,##0").format(
-                            (loanAmountWithBenefit -
-                                    (index * monthlyOverallPayment)) -
-                                monthlyOverallPayment.round());
-                        return [
-                          paymentNumber,
-                          totalPayments,
-                          principal,
-                          interest,
-                          balance,
-                          remainingAmount
-                        ];
-                      },
-                    ),
+                    data: generateData(splitIndex, monthCount),
                     headerStyle: pw.TextStyle(
                         font: pw.Font.ttf(fontData), color: PdfColors.white),
                     headerDecoration:
                         const pw.BoxDecoration(color: PdfColors.blue),
-                    cellHeight: 30,
                     cellAlignments: {
                       0: pw.Alignment.centerRight,
                       1: pw.Alignment.centerRight,
@@ -192,32 +242,116 @@ class LoanCubit extends Cubit<LoanState> {
                     },
                   ),
                 ],
-              ));
-        },
-      ),
-    );
-
-    Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => pdf.save(),
-    );
+              ),
+            );
+          },
+        ),
+      );
+      Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => pdf.save(),
+      );
+    }
   }
 
   void saveAsPdf(BuildContext context) async {
     var status = await Permission.storage.status;
-    if (!status.isGranted) {
+    var status2 = await Permission.manageExternalStorage.status;
+    if (!status.isGranted || !status2.isGranted) {
       status = await Permission.storage.request();
+      status2 = await Permission.manageExternalStorage.request();
     }
+
     final pdf = pw.Document();
-    var fontdata = await rootBundle.load("assets/fonts/Almarai-Bold.ttf");
+    var fontData = await rootBundle.load("assets/fonts/Almarai-Bold.ttf");
+
+    int monthCount = monthNumber();
+    int splitIndex = 24;
+
+    List<List<String>> generateData(int start, int end) {
+      return List<List<String>>.generate(
+        end - start,
+        (index) {
+          final actualIndex = start + index;
+          final paymentNumber = (actualIndex + 1).toString();
+          final totalPayments = NumberFormat("#,##0").format(
+              loanAmountWithBenefit -
+                  (actualIndex * monthlyOverallPayment).round());
+          final principal =
+              NumberFormat("#,##0").format(monthlyOverallPayment.round());
+          final interest =
+              NumberFormat("#,##0").format(calcMonthlyBenefitPayment().round());
+          final balance =
+              NumberFormat("#,##0").format(calcLoanMonthlyPayment().round());
+          final remainingAmount = NumberFormat("#,##0").format(
+              (loanAmountWithBenefit - (actualIndex * monthlyOverallPayment)) -
+                  monthlyOverallPayment.round());
+          return [
+            paymentNumber,
+            totalPayments,
+            principal,
+            interest,
+            balance,
+            remainingAmount
+          ];
+        },
+      );
+    }
+
+    // Add first page
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
           return pw.Directionality(
+            textDirection: pw.TextDirection.rtl,
+            child: pw.Column(
+              children: [
+                pw.Text(
+                  "Loan Payment Table - Page 1",
+                  style: pw.TextStyle(
+                      fontSize: 24, fontWeight: pw.FontWeight.bold),
+                ),
+                pw.SizedBox(height: 20),
+                pw.TableHelper.fromTextArray(
+                  headers: [
+                    'رقم الدفعة',
+                    'مجموع الدفعات',
+                    'الأساسي',
+                    'الفائدة',
+                    'الرصيد',
+                    'المبلغ المتبقي'
+                  ],
+                  data: generateData(
+                      0, monthCount > splitIndex ? splitIndex : monthCount),
+                  headerStyle: pw.TextStyle(
+                      font: pw.Font.ttf(fontData), color: PdfColors.white),
+                  headerDecoration:
+                      const pw.BoxDecoration(color: PdfColors.blue),
+                  cellAlignments: {
+                    0: pw.Alignment.centerRight,
+                    1: pw.Alignment.centerRight,
+                    2: pw.Alignment.centerRight,
+                    3: pw.Alignment.centerRight,
+                    4: pw.Alignment.centerRight,
+                    5: pw.Alignment.centerRight,
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    if (monthCount > splitIndex) {
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.Directionality(
               textDirection: pw.TextDirection.rtl,
               child: pw.Column(
                 children: [
                   pw.Text(
-                    "Loan Payment Table",
+                    "Loan Payment Table - Page 2",
                     style: pw.TextStyle(
                         fontSize: 24, fontWeight: pw.FontWeight.bold),
                   ),
@@ -231,38 +365,11 @@ class LoanCubit extends Cubit<LoanState> {
                       'الرصيد',
                       'المبلغ المتبقي'
                     ],
-                    data: List<List<String>>.generate(
-                      monthNumber(),
-                      (index) {
-                        final paymentNumber = (index + 1).toString();
-                        final totalPayments = NumberFormat("#,##0").format(
-                            loanAmountWithBenefit -
-                                (index * monthlyOverallPayment).round());
-                        final principal = NumberFormat("#,##0")
-                            .format(monthlyOverallPayment.round());
-                        final interest = NumberFormat("#,##0")
-                            .format(calcMonthlyBenefitPayment().round());
-                        final balance = NumberFormat("#,##0")
-                            .format(calcLoanMonthlyPayment().round());
-                        final remainingAmount = NumberFormat("#,##0").format(
-                            (loanAmountWithBenefit -
-                                    (index * monthlyOverallPayment)) -
-                                monthlyOverallPayment.round());
-                        return [
-                          paymentNumber,
-                          totalPayments,
-                          principal,
-                          interest,
-                          balance,
-                          remainingAmount
-                        ];
-                      },
-                    ),
+                    data: generateData(splitIndex, monthCount),
                     headerStyle: pw.TextStyle(
-                        font: pw.Font.ttf(fontdata), color: PdfColors.white),
+                        font: pw.Font.ttf(fontData), color: PdfColors.white),
                     headerDecoration:
                         const pw.BoxDecoration(color: PdfColors.blue),
-                    cellHeight: 30,
                     cellAlignments: {
                       0: pw.Alignment.centerRight,
                       1: pw.Alignment.centerRight,
@@ -273,38 +380,37 @@ class LoanCubit extends Cubit<LoanState> {
                     },
                   ),
                 ],
-              ));
-        },
-      ),
-    );
+              ),
+            );
+          },
+        ),
+      );
+    }
 
     if (status.isGranted) {
-
       String? downloadPath = await FilePicker.platform.getDirectoryPath();
       if (downloadPath != null) {
         final file = File(
             "$downloadPath/LoanPaymentTable_${DateTime.now().toIso8601String()}.pdf");
         await file.writeAsBytes(await pdf.save());
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('PDF saved to ${file.path}')),
-        );
+        customSnackBar(context, 'PDF saved to ${file.path}');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Could not access the Downloads directory.')),
-        );
+        customSnackBar(context, 'Could not access the Downloads directory.');
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Permission denied. Cannot save PDF.')),
+      customSnackBar(
+        context,
+        'Permission denied. Cannot save PDF.',
       );
     }
   }
 
   void saveAsXls(BuildContext context) async {
     var status = await Permission.storage.status;
-    if (!status.isGranted) {
+    var status2 = await Permission.manageExternalStorage.status;
+    if (!status.isGranted || !status2.isGranted) {
       status = await Permission.storage.request();
+      status2 = await Permission.manageExternalStorage.request();
     }
     var excel = Excel.createExcel();
     Sheet sheetObject = excel['Sheet1'];
@@ -335,25 +441,18 @@ class LoanCubit extends Cubit<LoanState> {
                 monthlyOverallPayment.round()))
       ], i + 1);
     }
-    if (status.isGranted) {
+    if (status.isGranted || status2.isGranted) {
       String? downloadPath = await FilePicker.platform.getDirectoryPath();
       if (downloadPath != null) {
         final file = File(
             "$downloadPath/loan_payment_table ${DateTime.now().toIso8601String()}.xlsx");
         await file.writeAsBytes(excel.encode()!);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('XLS saved to ${file.path}')),
-        );
+        customSnackBar(context, 'XLS saved to ${file.path}');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Could not access the Downloads directory.')),
-        );
+        customSnackBar(context, 'Could not access the Downloads directory.');
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Permission denied. Cannot save XLS.')),
-      );
+      customSnackBar(context, 'Permission denied. Cannot save XLS.');
     }
   }
 }

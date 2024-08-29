@@ -71,11 +71,12 @@ class ClientsCubit extends Cubit<ClientsState> {
   }
 
   Future<void> insertClient() async {
-    if (nameController.text.isNotEmpty && dateController.text.isNotEmpty ) {
-      if(nameController.text.length < 30 && nameController.text.length>2){
+    if (nameController.text.isNotEmpty && dateController.text.isNotEmpty) {
+      if (nameController.text.length < 30 && nameController.text.length > 2) {
         emit(InsertClientLoading());
         await clientsRepo
-            .insertToClients(name: nameController.text, date: dateController.text)
+            .insertToClients(
+                name: nameController.text, date: dateController.text)
             .then((value) {
           nameController.clear();
           dateController.clear();
@@ -84,8 +85,9 @@ class ClientsCubit extends Cubit<ClientsState> {
         }).catchError((e) {
           emit(InsertClientFailure(error: e.toString()));
         });
-      }else{
-        emit(InsertClientFailure(error: 'لا يمكن للإسم أن يكون اكثر من 30 حرف و أقل من ثلاث أحرف'));
+      } else {
+        emit(InsertClientFailure(
+            error: 'لا يمكن للإسم أن يكون اكثر من 30 حرف و أقل من ثلاث أحرف'));
       }
     } else {
       emit(InsertClientFailure(error: "جميع الحقول مطلوبة"));
@@ -118,36 +120,40 @@ class ClientsCubit extends Cubit<ClientsState> {
   }
 
   Future<void> editClient({required num id}) async {
-    if(editNameController.text.isEmpty){
+    if (editNameController.text.isEmpty) {
       emit(EditClientFailure(error: 'لا يمكن للإسم أن يكون فارغاً'));
+    } else {
+      emit(EditLoanLoading());
+      var result =
+          await clientsRepo.editClient(id: id, name: editNameController.text);
+      result.fold((error) {
+        emit(EditLoanFailure(error: error.toString()));
+      }, (r) {
+        editNameController.clear();
+        emit(EditLoanSuccess());
+        getClients();
+      });
     }
-    else{
-    emit(EditLoanLoading());
-    var result =
-        await clientsRepo.editClient(id: id, name: editNameController.text);
-    result.fold((error) {
-      emit(EditLoanFailure(error: error.toString()));
-    }, (r) {
-      editNameController.clear();
-      emit(EditLoanSuccess());
-      getClients();
-    });}
   }
 
   Future<void> editLoan(
       {required num id,
       required num paymentsNumber,
       required num costumerId}) async {
-    emit(EditClientLoading());
-    var result =
-        await clientsRepo.editLoan(paymentsNumber: paymentsNumber, id: id);
-    result.fold((error) {
-      emit(EditClientFailure(error: error.toString()));
-    }, (r) {
-      editNameController.clear();
-      emit(EditClientSuccess());
-      getClientLoans(uId: costumerId);
-    });
+    if (paymentsNumber >= 0) {
+      emit(EditLoanLoading());
+      var result =
+          await clientsRepo.editLoan(paymentsNumber: paymentsNumber, id: id);
+      result.fold((error) {
+        emit(EditClientFailure(error: error.toString()));
+      }, (r) {
+        emit(EditLoanSuccess());
+        paymentsController.clear();
+        getClientLoans(uId: costumerId);
+      });
+    } else {
+      emit(EditLoanFailure(error: 'لا يمكن أن يكون عدد دفعات القرض سالب'));
+    }
   }
 
   Future<void> deleteClient({required int id}) async {

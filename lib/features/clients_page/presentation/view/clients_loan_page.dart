@@ -5,7 +5,6 @@ import 'package:bank_loan/features/clients_page/presentation/view/widgets/loan/e
 import 'package:bank_loan/features/clients_page/presentation/view/widgets/loan/loan_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../core/util/screen_size.dart';
 import '../../../loan_page/presentation/manger/loan_cubit.dart';
 import '../manger/clients_cubit.dart';
@@ -28,6 +27,9 @@ class ClientLoanPage extends StatelessWidget {
       listener: (context, state) {
         if (state is EditLoanSuccess) {
           customSnackBar(context, 'تم تعديل الدفعات');
+        }
+        if (state is EditLoanFailure) {
+          customSnackBar(context, state.error);
         }
       },
       builder: (context, state) {
@@ -83,7 +85,7 @@ class ClientLoanPage extends StatelessWidget {
                       );
                     },
                   )
-                : EmptyLoanScreen(uId: uId));
+                : EmptyLoanScreen(uId: uId,cubit: cubit,));
       },
     );
   }
